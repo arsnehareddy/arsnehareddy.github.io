@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio GitHub Package Maker</title>
+<style>
+:root{font:16px/1.5 system-ui,sans-serif;color:#1b2924;background:#f2f3ed}*{box-sizing:border-box}body{margin:0;padding:32px 18px}.wrap{max-width:720px;margin:0 auto;background:white;padding:clamp(22px,5vw,48px);border:1px solid #d3d9d2}h1{font-size:clamp(1.8rem,5vw,3rem);line-height:1.1;margin:0 0 14px}p{color:#52615a}label{display:block;font-weight:700;margin:30px 0 10px}input{width:100%;padding:16px;border:1px solid #8b9a8f}button{background:#1b2924;color:white;border:0;padding:14px 20px;font:600 1rem system-ui;cursor:pointer;margin-top:20px}button:disabled{opacity:.5;cursor:wait}#status{white-space:pre-wrap;margin-top:22px;color:#384940}.note{padding:14px 18px;background:#e9eee8;margin-top:28px}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Prepare your portfolio for GitHub</h1>
+<p>Choose the HTML file you downloaded after adding your photos. This tool keeps each image at its existing quality and places images in an <strong>assets</strong> folder beside a smaller <strong>index.html</strong>.</p>
+<label for="site-file">Your edited HTML file</label>
+<input id="site-file" type="file" accept=".html,text/html">
+<button id="make" type="button">Download GitHub package</button>
+<div id="status" role="status" aria-live="polite"></div>
+<div class="note">Unzip the download on your computer. Upload <strong>index.html</strong> and the <strong>assets</strong> folder to the root of your GitHub repository. Keep any private editor file off GitHub.</div>
+</div>
+<script type="text/plain" id="public-code">(() => {
+  const main = document.querySelector('main');
+  const page = document.getElementById('project-page');
+  const gallery = page.querySelector('.dialog-gallery');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = lightbox.querySelector('.lightbox-stage img');
+  const stage = lightbox.querySelector('.lightbox-stage');
+  const zoom = document.getElementById('lightbox-zoom');
+  let activeCard = null, photoIndex = 0, touchX = null;
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  main.querySelectorAll('.project').forEach(card => {
+    if (!card.id) card.id = 'project-' + Math.random().toString(36).slice(2, 10);
+    const link = card.querySelector('.card-hit') || document.createElement('a');
+    link.className = 'card-hit';
+    link.href = '#project=' + encodeURIComponent(card.id);
+    link.setAttribute('aria-label', 'Open project: ' + card.querySelector('h3').textContent);
+    if (!link.isConnected) card.append(link);
+  });
+
+  function closePhoto() {
+    lightbox.hidden = true;
+    lightboxImage.removeAttribute('src');
+    stage.classList.remove('zoomed');
+    document.body.style.overflow = '';
+  }
+  function showPhoto(index) {
+    const photos = activeCard?.querySelectorAll('.project-gallery img') || [];
+    if (!photos.length) return;
+    photoIndex = (index + photos.length) % photos.length;
+    const photo = photos[photoIndex];
+    lightboxImage.src = photo.src;
+    lightboxImage.alt = photo.alt || 'Project photo';
+    lightbox.querySelector('.lightbox-caption').textContent = photo.alt || activeCard.querySelector('h3').textContent;
+    lightbox.querySelector('.lightbox-count').textContent = (photoIndex + 1) + ' / ' + photos.length;
+    stage.classList.remove('zoomed');
+    zoom.textContent = 'Zoom in';
+    lightbox.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lightbox-close').focus();
+  }
+  function route() {
+    if (!lightbox.hidden) closePhoto();
+    const hash = location.hash.slice(1);
+    const id = hash.startsWith('project=') ? decodeURIComponent(hash.slice(8)) : null;
+    const card = id && document.getElementById(id);
+    if (!card || !card.classList.contains('project')) {
+      activeCard = null;
+      main.hidden = false;
+      page.hidden = true;
+      document.title = 'Sneha Reddy Patlolla | Architect';
+      if (hash && !hash.startsWith('project=')) requestAnimationFrame(() => document.getElementById(hash)?.scrollIntoView());
+      return;
+    }
+    activeCard = card;
+    page.querySelector('.dialog-title').textContent = card.querySelector('h3').textContent;
+    page.querySelector('.dialog-meta').textContent = card.querySelector('.project-body p').textContent;
+    page.querySelector('.dialog-description').textContent = card.querySelector('.project-description').textContent;
+    gallery.replaceChildren();
+    const photos = card.querySelectorAll('.project-gallery img');
+    if (!photos.length) {
+      const empty = document.createElement('p');
+      empty.className = 'gallery-empty';
+      empty.textContent = 'Project photos coming soon.';
+      gallery.append(empty);
+    }
+    photos.forEach((photo, index) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'zoom-photo';
+      button.dataset.index = index;
+      button.setAttribute('aria-label', 'Open photo ' + (index + 1) + ' of ' + photos.length);
+      button.append(photo.cloneNode(true));
+      item.append(button);
+      gallery.append(item);
+    });
+    main.hidden = true;
+    page.hidden = false;
+    document.title = page.querySelector('.dialog-title').textContent + ' | Sneha Reddy Patlolla';
+    scrollTo(0, 0);
+  }
+
+  addEventListener('hashchange', route);
+  page.querySelector('.dialog-close').addEventListener('click', () => {
+    location.hash = 'work';
+    route();
+    requestAnimationFrame(() => document.getElementById('work').scrollIntoView());
+  });
+  gallery.addEventListener('click', event => {
+    const button = event.target.closest('.zoom-photo');
+    if (button) showPhoto(Number(button.dataset.index));
+  });
+  document.getElementById('lightbox-close').addEventListener('click', closePhoto);
+  document.getElementById('lightbox-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
+  document.getElementById('lightbox-next').addEventListener('click', () => showPhoto(photoIndex + 1));
+  zoom.addEventListener('click', () => {
+    const enlarged = stage.classList.toggle('zoomed');
+    zoom.textContent = enlarged ? 'Fit image' : 'Zoom in';
+    stage.scrollLeft = stage.scrollTop = 0;
+  });
+  document.addEventListener('keydown', event => {
+    if (lightbox.hidden) return;
+    if (event.key === 'Escape') closePhoto();
+    if (event.key === 'ArrowLeft') showPhoto(photoIndex - 1);
+    if (event.key === 'ArrowRight') showPhoto(photoIndex + 1);
+  });
+  lightbox.addEventListener('touchstart', event => { touchX = event.touches[0]?.clientX ?? null; }, {passive:true});
+  lightbox.addEventListener('touchend', event => {
+    if (touchX === null) return;
+    const dx = (event.changedTouches[0]?.clientX ?? touchX) - touchX;
+    if (!stage.classList.contains('zoomed') && Math.abs(dx) > 55) showPhoto(photoIndex + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }, {passive:true});
+
+  const intro = document.getElementById('intro-screen');
+  const video = document.getElementById('intro-video');
+  const play = document.getElementById('intro-play');
+  let timer;
+  function closeIntro() {
+    clearTimeout(timer);
+    video.pause();
+    intro.hidden = true;
+    play.hidden = true;
+    document.body.style.overflow = '';
+  }
+  function showIntro() {
+    intro.hidden = false;
+    play.hidden = true;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('intro-skip').focus();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      video.hidden = true;
+      timer = setTimeout(closeIntro, 2800);
+    } else if (video.getAttribute('src')) {
+      video.hidden = false;
+      try {
+        const result = video.play();
+        if (result?.catch) result.catch(() => {
+          video.hidden = true;
+          play.hidden = false;
+          clearTimeout(timer);
+          timer = setTimeout(closeIntro, 10000);
+        });
+      } catch { video.hidden = true; play.hidden = false; }
+      timer = setTimeout(closeIntro, 10000);
+    } else timer = setTimeout(closeIntro, 4800);
+  }
+  document.getElementById('intro-skip').addEventListener('click', closeIntro);
+  video.addEventListener('ended', closeIntro);
+  video.addEventListener('error', () => {
+    video.hidden = true;
+    play.hidden = true;
+    clearTimeout(timer);
+    timer = setTimeout(closeIntro, 4800);
+  });
+  play.addEventListener('click', () => {
+    video.hidden = false;
+    try {
+      Promise.resolve(video.play()).then(() => {
+        play.hidden = true;
+        clearTimeout(timer);
+        timer = setTimeout(closeIntro, 10000);
+      }).catch(() => { video.hidden = true; });
+    } catch { video.hidden = true; }
+  });
+  route();
+  showIntro();
+})();
+</script>
+<script>
+(() => {
+  const input = document.getElementById('site-file');
+  const button = document.getElementById('make');
+  const status = document.getElementById('status');
+  const encoder = new TextEncoder();
+  const table = new Uint32Array(256);
+  for (let i=0;i<256;i++) {
+    let c=i;
+    for (let j=0;j<8;j++) c = c&1 ? 0xedb88320^(c>>>1) : c>>>1;
+    table[i]=c>>>0;
+  }
+  function crc32(bytes) {
+    let c=0xffffffff;
+    for (const b of bytes) c=table[(c^b)&255]^(c>>>8);
+    return (c^0xffffffff)>>>0;
+  }
+  function header(length) {
+    const bytes=new Uint8Array(length);
+    return {bytes, view:new DataView(bytes.buffer)};
+  }
+  function zip(files) {
+    const parts=[], central=[];
+    let offset=0, centralSize=0;
+    for (const file of files) {
+      const name=encoder.encode(file.name);
+      const data=file.bytes;
+      const crc=crc32(data);
+      const local=header(30+name.length);
+      local.view.setUint32(0,0x04034b50,true);
+      local.view.setUint16(4,20,true);
+      local.view.setUint16(6,0x0800,true);
+      local.view.setUint32(14,crc,true);
+      local.view.setUint32(18,data.length,true);
+      local.view.setUint32(22,data.length,true);
+      local.view.setUint16(26,name.length,true);
+      local.bytes.set(name,30);
+      parts.push(local.bytes,data);
+      const record=header(46+name.length);
+      record.view.setUint32(0,0x02014b50,true);
+      record.view.setUint16(4,20,true);
+      record.view.setUint16(6,20,true);
+      record.view.setUint16(8,0x0800,true);
+      record.view.setUint32(16,crc,true);
+      record.view.setUint32(20,data.length,true);
+      record.view.setUint32(24,data.length,true);
+      record.view.setUint16(28,name.length,true);
+      record.view.setUint32(42,offset,true);
+      record.bytes.set(name,46);
+      central.push(record.bytes);
+      centralSize+=record.bytes.length;
+      offset+=local.bytes.length+data.length;
+    }
+    const end=header(22);
+    end.view.setUint32(0,0x06054b50,true);
+    end.view.setUint16(8,files.length,true);
+    end.view.setUint16(10,files.length,true);
+    end.view.setUint32(12,centralSize,true);
+    end.view.setUint32(16,offset,true);
+    return new Blob([...parts,...central,end.bytes],{type:'application/zip'});
+  }
+  function dataBytes(url) {
+    const match=/^data:([^;,]+)?(?:;[^,]*)?,(.*)$/s.exec(url);
+    if (!match) throw new Error('An embedded file could not be read.');
+    const mime=match[1]||'application/octet-stream';
+    const raw=match[2];
+    if (!url.slice(0,url.indexOf(',')).includes(';base64')) return {mime,bytes:encoder.encode(decodeURIComponent(raw))};
+    const binary=atob(raw);
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    return {mime,bytes};
+  }
+  const extensions={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/avif':'avif','image/gif':'gif','image/heic':'heic','image/heif':'heif','image/svg+xml':'svg','video/mp4':'mp4','video/webm':'webm'};
+  button.addEventListener('click',async()=>{
+    const file=input.files[0];
+    if (!file) { status.textContent='Please choose your edited HTML file first.'; return; }
+    button.disabled=true;
+    status.textContent='Reading your website and separating full-quality files…';
+    try {
+      const doc=new DOMParser().parseFromString(await file.text(),'text/html');
+      if (!doc.querySelector('main,.project-grid')) throw new Error('This does not look like the architectural portfolio HTML.');
+      const main=doc.querySelector('main');
+      if (main) { main.hidden=false; main.removeAttribute('data-snapshot-at'); }
+      for (const selector of ['#project-page','#intro-screen','#lightbox']) {
+        const el=doc.querySelector(selector);
+        if (el) el.hidden=true;
+      }
+      doc.querySelector('.dialog-gallery')?.replaceChildren();
+      for (const selector of ['.dialog-title','.dialog-meta','.dialog-description']) {
+        const el=doc.querySelector(selector);
+        if (el) el.textContent='';
+      }
+      doc.querySelector('#lightbox .lightbox-stage img')?.removeAttribute('src');
+      doc.querySelector('#lightbox .lightbox-stage')?.classList.remove('zoomed');
+      doc.querySelectorAll('[contenteditable],[data-editable],[spellcheck]').forEach(el=>{
+        el.removeAttribute('contenteditable');el.removeAttribute('data-editable');el.removeAttribute('spellcheck');
+      });
+      doc.querySelectorAll('.editor-bar,input[type=file],.photo-change,.card-tools,.dialog-actions,.hint').forEach(el=>el.remove());
+      const map=new Map(), assets=[];
+      let n=0;
+      for (const el of doc.querySelectorAll('img[src^="data:"],video[src^="data:"]')) {
+        const source=el.getAttribute('src');
+        if (!map.has(source)) {
+          const {mime,bytes}=dataBytes(source);
+          const ext=extensions[mime]||'bin';
+          const name='assets/photo-'+String(++n).padStart(3,'0')+'.'+ext;
+          assets.push({name,bytes});
+          map.set(source,name);
+        }
+        el.setAttribute('src',map.get(source));
+      }
+      const publicCode=document.getElementById('public-code').textContent;
+      const executable=doc.querySelector('script:not([type]),script[type="text/javascript"]');
+      if (!executable) throw new Error('The website script was not found.');
+      executable.textContent=publicCode;
+      doc.querySelector('#public-code')?.remove();
+      const html='<!doctype html>\n'+doc.documentElement.outerHTML;
+      const files=[{name:'index.html',bytes:encoder.encode(html)},...assets];
+      const large=files.filter(f=>f.bytes.length>25*1024*1024).map(f=>f.name);
+      const blob=zip(files);
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='sneha-portfolio-github.zip';
+      document.body.append(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href),30000);
+      status.textContent='Package ready: index.html + '+assets.length+' original-quality asset'+(assets.length===1?'':'s')+'.\n'+
+        (large.length ? 'These files are over GitHub’s 25 MB browser limit: '+large.join(', ')+'. Use GitHub Desktop for those files.' :
+        'Each file is under GitHub’s 25 MB browser upload limit. Unzip and upload the contents.');
+    } catch(error) { status.textContent='Could not prepare the package: '+error.message; }
+    finally { button.disabled=false; }
+  });
+})();
+</script>
+</body></html>
