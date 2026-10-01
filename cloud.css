@@ -1,0 +1,12 @@
+.editor-bar[hidden],[hidden]{display:none!important}
+.owner-login{border:0;background:none;color:inherit;font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+#login-dialog{width:min(440px,calc(100% - 40px));padding:38px;border:1px solid #bdc7bb;background:#f4f3ed;color:#17211f}
+#login-dialog::backdrop{background:#101916bb;backdrop-filter:blur(5px)}
+#login-dialog h2{font:500 2.3rem Manrope,system-ui,sans-serif;letter-spacing:-.04em;margin:16px 0}
+#login-dialog p{overflow-wrap:anywhere;color:#526158}#login-dialog .button{border:0;cursor:pointer}
+.dialog-dismiss{position:absolute;top:8px;right:10px;background:none;border:0;font:1.7rem system-ui;color:#17211f;cursor:pointer;padding:5px 10px}
+#cloud-notice{position:fixed;z-index:150;bottom:20px;left:20px;max-width:min(520px,calc(100vw - 40px));padding:14px 20px;background:#17211f;color:#fff;border:1px solid #b98760;box-shadow:0 8px 25px #0003;font:14px/1.5 system-ui,sans-serif}
+body.edit-mode .footer{padding-bottom:180px}.editor-bar{z-index:120}.editor-status{max-width:340px}
+.gallery-item img{max-height:none;object-fit:contain}.gallery-item .zoom-photo:hover img{filter:none!important}
+.lightbox-stage{overflow:hidden!important}.lightbox-stage img{image-rendering:auto;filter:none!important}
+@media(max-width:650px){.editor-bar{max-height:45vh;overflow-y:auto}.editor-bar button{min-height:44px}.editor-status{max-width:none}#cloud-notice{bottom:10px;left:10px;max-width:calc(100vw - 20px)}}

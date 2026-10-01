@@ -60,7 +60,6 @@
     .intro-screen:before{inset:0;transform:none;background-size:clamp(48px,5.5vw,76px) clamp(48px,5.5vw,76px);mask-image:radial-gradient(ellipse at center,black 15%,transparent 78%);animation:plan-pan 5s ease-out both}.intro-screen:after{width:min(55vw,560px);transform:rotate(45deg);animation:plan-outline 5s ease-in-out both}.intro-screen video{object-fit:contain;filter:none;background:#14201d}.intro-content{width:100%;max-width:none;padding:0 5vw}.intro-content h2{font-size:clamp(2.15rem,7vw,7.5rem);letter-spacing:-.065em}.intro-content .eyebrow{font-size:clamp(.7rem,1vw,.9rem);letter-spacing:.18em;margin-bottom:20px}.intro-content p{font-size:clamp(.7rem,1vw,.85rem);letter-spacing:.16em;margin-top:20px}@keyframes plan-pan{from{opacity:0;background-position:0 60px}to{opacity:1;background-position:0 0}}@keyframes plan-outline{from{opacity:0;scale:.8}to{opacity:1;scale:1}}.intro-play{position:absolute;z-index:3;left:50%;bottom:calc(12% + env(safe-area-inset-bottom));transform:translateX(-50%);border:1px solid #d0a880;background:#17211f;color:#f4f3ee;padding:12px 18px;font:600 .85rem "DM Sans",sans-serif;cursor:pointer}.intro-play[hidden]{display:none}.hero-visual img.user-photo,.edit-mode .hero-visual img.user-photo{filter:none}@media(max-width:650px){.intro-content{padding:0 5vw}.intro-content h2{font-size:clamp(2rem,8.5vw,3.7rem)}.intro-content .eyebrow{font-size:.67rem}.intro-content p{font-size:.68rem}.intro-screen:after{width:min(55vw,560px)}.hero-visual img.user-photo{filter:none}}@media(prefers-reduced-motion:reduce){.intro-screen:before,.intro-screen:after{animation:none}}
     .lightbox-stage{overflow:auto;touch-action:auto}.lightbox-stage img{touch-action:auto}.lightbox-stage.zoomed{display:block;text-align:center}.lightbox-stage.zoomed img{width:200%;max-width:none;max-height:none;height:auto}.lightbox-controls{flex-wrap:wrap}.lightbox-zoom{white-space:nowrap}@media(max-width:650px){.lightbox-stage.zoomed img{width:240%}}
   </style>
-
 <style id="portfolio-motion">
 /* Project and photo viewer motion, with reduced motion support. */
 .project-page:not([hidden]) .dialog-inner{animation:project-enter .55s cubic-bezier(.2,.7,.2,1) both}
@@ -78,305 +77,42 @@
 @keyframes photo-enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes viewer-enter{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.project-page:not([hidden]) .dialog-inner,.project-page:not([hidden]) .dialog-gallery .gallery-item,.lightbox:not([hidden]){animation:none}.project .project-art img,.gallery-item .zoom-photo img,.lightbox-stage img{transition:none}}
-</style></head>
+</style>
+<link rel="stylesheet" href="cloud.css">
+</head>
 <body class="" style="">
   <header><div class="shell nav"><a class="brand" href="#top" aria-label="Sneha Reddy Patlolla, home"><span class="brandmark" aria-hidden="true"></span><span>SNEHA REDDY<br>PATLOLLA</span></a><nav aria-label="Main navigation"><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav></div></header>
-  <main id="top">
-    <div class="hero"><div class="hero-copy"><span class="eyebrow">Architect · Hyderabad, India</span><h1>Spaces shaped<br>with <em>purpose.</em></h1><p>Architecture, interiors, and thoughtful project coordination from first concept through construction.</p><div class="hero-actions"><a class="button" href="#work">Explore my work</a><a class="text-link" href="#contact">Start a conversation</a></div></div><div class="hero-visual"><img src="https://images.unsplash.com/photo-1614595737683-1740e41bfaac?auto=format&amp;fit=crop&amp;w=1400&amp;q=85" alt="Contemporary concrete architecture with geometric volumes" loading="eager"><span class="image-note">Architectural reference image</span></div></div>
+  <main id="top" data-snapshot-at="1790705215947">
+    <div class="hero"><div class="hero-copy"><span class="eyebrow">Architect · Hyderabad, India</span><h1>Spaces shaped<br>with <em>purpose.</em></h1><p>Architecture, interiors, and thoughtful project coordination from first concept through construction.</p><div class="hero-actions"><a class="button" href="#work">Explore my work</a><a class="text-link" href="#contact">Start a conversation</a></div></div><div class="hero-visual"><img src="https://images.unsplash.com/photo-1614595737683-1740e41bfaac?auto=format&amp;fit=crop&amp;w=1400&amp;q=85" alt="Contemporary concrete architecture with geometric volumes" loading="eager"><span class="image-note">Architectural reference image</span><button class="photo-change" type="button" data-photo="hero">Change hero image</button></div></div>
     <section class="shell" aria-labelledby="intro-title"><span class="eyebrow">Design approach</span><div class="intro-grid"><div id="intro-title" class="intro-lead">Clear ideas. Considered details. Spaces made to work beautifully in everyday life.</div><div class="intro-side"><p>I work across residential architecture, interiors, clubhouses, and large scale developments, connecting design intent with the practical demands of execution.</p><p>Every project begins with listening, understanding the site, and finding a balance between function, character, and buildability.</p></div></div></section>
-    <section class="work" id="work" aria-labelledby="work-title"><div class="shell"><div class="section-top"><div><span class="eyebrow">Selected projects</span><h2 id="work-title">A range of scales.</h2></div><p>From private interiors to complex residential developments, each project asks for its own careful response.</p></div><div class="project-grid">
-      <article class="project" id="project-2fzcpmzr"><div class="project-art"><img src="assets/photo-001.jpg" alt="03"></div><div class="project-body"><h3>Madhu projects</h3><p>Residential development · Financial District, Hyderabad</p><div class="project-foot">Architecture &amp; consultant coordination</div></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"><img src="assets/photo-002.jpg" alt="03"><img src="assets/photo-003.jpg" alt="02"><img src="assets/photo-004.jpg" alt="01"><img src="assets/photo-005.jpg" alt="01"><img src="assets/photo-006.jpg" alt="02"><img src="assets/photo-007.jpg" alt="03"><img src="assets/photo-008.jpg" alt="02"><img src="assets/photo-009.jpg" alt="01"><img src="assets/photo-010.jpg" alt="05"><img src="assets/photo-011.jpg" alt="04"><img src="assets/photo-012.jpg" alt="03"><img src="assets/photo-013.jpg" alt="01"><img src="assets/photo-014.jpg" alt="13"><img src="assets/photo-015.jpg" alt="12"><img src="assets/photo-016.jpg" alt="11"><img src="assets/photo-017.jpg" alt="10"><img src="assets/photo-018.jpg" alt="09"><img src="assets/photo-019.jpg" alt="08"><img src="assets/photo-020.jpg" alt="07"><img src="assets/photo-021.jpg" alt="06"><img src="assets/photo-022.jpg" alt="02"><img src="assets/photo-023.jpg" alt="03"><img src="assets/photo-024.jpg" alt="02"><img src="assets/photo-025.jpg" alt="01"><img src="assets/photo-026.jpg" alt="03"><img src="assets/photo-027.jpg" alt="02"><img src="assets/photo-028.jpg" alt="01"><img src="assets/photo-029.jpg" alt="02"><img src="assets/photo-030.jpg" alt="01"></div></div><a class="card-hit" href="#project=project-2fzcpmzr" aria-label="Open project: Madhu projects"></a></article>
-      <article class="project" id="project-lfe22fdv"><div class="project-art"><span>Project image coming soon</span></div><div class="project-body"><h3>IRIS Sreeven Villas</h3><p>Residential interiors · Hyderabad</p><div class="project-foot">Interiors &amp; execution coordination</div></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"></div></div><a class="card-hit" href="#project=project-lfe22fdv" aria-label="Open project: IRIS Sreeven Villas"></a></article>
-      <article class="project" id="project-24hthg5x"><div class="project-art"><span>Project image coming soon</span></div><div class="project-body"><h3>Gangotri Experience Centre</h3><p>Commercial interiors · Tellapur</p><div class="project-foot">Interiors &amp; execution coordination</div></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"></div></div><a class="card-hit" href="#project=project-24hthg5x" aria-label="Open project: Gangotri Experience Centre"></a></article>
-    <article class="project" id="project-x4ght7sn"><div class="project-art"><span>Project image coming soon</span></div><div class="project-body"><h3>New project</h3><p>Project type · Location</p><div class="project-foot">Your role</div></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"></div></div><a class="card-hit" href="#project=project-x4ght7sn" aria-label="Open project: New project"></a></article></div></div></section>
+    <section class="work" id="work" aria-labelledby="work-title"><div class="shell"><div class="section-top"><div><span class="eyebrow">Selected experience</span><h2 id="work-title">A range of scales.</h2></div><p>From private interiors to complex residential developments, each project asks for its own careful response.</p></div><div class="project-grid">
+      <article class="project" id="project-2fzcpmzr"><div class="project-art"><img src="assets/photo-001.jpg" alt="03"></div><div class="project-body"><h3>Madhu projects</h3><p>Residential development · Financial District, Hyderabad</p><div class="project-foot">Architecture &amp; consultant coordination</div></div><div class="card-tools"><button type="button" class="open-button">Open project</button><button type="button" class="image-button">Add / change image</button><button type="button" class="remove-button">Remove project</button></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"><img src="assets/photo-002.jpg" alt="03"><img src="assets/photo-003.jpg" alt="02"><img src="assets/photo-004.jpg" alt="01"><img src="assets/photo-005.jpg" alt="01"><img src="assets/photo-006.jpg" alt="02"><img src="assets/photo-007.jpg" alt="03"><img src="assets/photo-008.jpg" alt="02"><img src="assets/photo-009.jpg" alt="01"><img src="assets/photo-010.jpg" alt="05"><img src="assets/photo-011.jpg" alt="04"><img src="assets/photo-012.jpg" alt="03"><img src="assets/photo-013.jpg" alt="01"><img src="assets/photo-014.jpg" alt="13"><img src="assets/photo-015.jpg" alt="12"><img src="assets/photo-016.jpg" alt="11"><img src="assets/photo-017.jpg" alt="10"><img src="assets/photo-018.jpg" alt="09"><img src="assets/photo-019.jpg" alt="08"><img src="assets/photo-020.jpg" alt="07"><img src="assets/photo-021.jpg" alt="06"><img src="assets/photo-022.jpg" alt="02"><img src="assets/photo-023.jpg" alt="03"><img src="assets/photo-024.jpg" alt="02"><img src="assets/photo-025.jpg" alt="01"><img src="assets/photo-026.jpg" alt="03"><img src="assets/photo-027.jpg" alt="02"><img src="assets/photo-028.jpg" alt="01"><img src="assets/photo-029.jpg" alt="02"><img src="assets/photo-030.jpg" alt="01"></div></div><a class="card-hit" href="#project=project-2fzcpmzr" aria-label="Open project: Madhu projects"></a></article>
+      <article class="project" id="project-lfe22fdv"><div class="project-art"><span>Project image coming soon</span></div><div class="project-body"><h3>IRIS Sreeven Villas</h3><p>Residential interiors · Hyderabad</p><div class="project-foot">Interiors &amp; execution coordination</div></div><div class="card-tools"><button type="button" class="open-button">Open project</button><button type="button" class="image-button">Add / change image</button><button type="button" class="remove-button">Remove project</button></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"></div></div><a class="card-hit" href="#project=project-lfe22fdv" aria-label="Open project: IRIS Sreeven Villas"></a></article>
+      <article class="project" id="project-24hthg5x"><div class="project-art"><span>Project image coming soon</span></div><div class="project-body"><h3>Gangotri Experience Centre</h3><p>Commercial interiors · Tellapur</p><div class="project-foot">Interiors &amp; execution coordination</div></div><div class="card-tools"><button type="button" class="open-button">Open project</button><button type="button" class="image-button">Add / change image</button><button type="button" class="remove-button">Remove project</button></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"></div></div><a class="card-hit" href="#project=project-24hthg5x" aria-label="Open project: Gangotri Experience Centre"></a></article>
+    <article class="project" id="project-x4ght7sn"><div class="project-art"><span>Project image coming soon</span></div><div class="project-body"><h3>New project</h3><p>Project type · Location</p><div class="project-foot">Your role</div></div><div class="card-tools"><button type="button" class="open-button">Open project</button><button type="button" class="image-button">Add / change image</button><button type="button" class="remove-button">Remove project</button></div><div class="project-data"><p class="project-description">Add the project brief, design approach, materials, and your contribution.</p><div class="project-gallery"></div></div><a class="card-hit" href="#project=project-x4ght7sn" aria-label="Open project: New project"></a></article></div><p class="hint">Project images can be added in edit mode.</p></div></section>
     <section class="shell" id="services" aria-labelledby="services-title"><div class="section-top"><div><span class="eyebrow">Expertise</span><h2 id="services-title">From idea to detail.</h2></div></div><div class="services-grid"><div class="service"><span class="num">01 /</span><h3>Architecture</h3><p>Plans, elevations, spatial design, and construction documentation for residential and commercial spaces.</p></div><div class="service"><span class="num">02 /</span><h3>Interior design</h3><p>Layouts, material palettes, detailing, and coordinated drawings that bring a cohesive interior vision to life.</p></div><div class="service"><span class="num">03 /</span><h3>Project coordination</h3><p>Working with structural, MEP, vendor, and site teams to keep design decisions clear through execution.</p></div></div></section>
-    <section class="about" id="about" aria-labelledby="about-title"><div class="shell about-grid"><div><span class="eyebrow">The architect</span><h2 id="about-title">Hello, I’m Sneha.</h2><figure class="founder-photo"><img src="assets/photo-031.jpg" alt="Portrait of Sneha Reddy"><span class="photo-placeholder">Founder photo</span><figcaption>Ar. Sneha Reddy</figcaption></figure></div><div><p>I’m a Hyderabad based architect with four years of experience across architecture and interiors. My work spans villa design, residential developments, clubhouses, and experience driven spaces.</p><p>I bring together creative thinking and technical coordination, from early design studies to detailed drawings and site collaboration.</p><div class="facts"><div class="fact"><b>Based in</b><span>Hyderabad, Telangana</span></div><div class="fact"><b>Focus</b><span>Architecture · Interiors · Coordination</span></div></div></div></div></section>
+    <section class="about" id="about" aria-labelledby="about-title"><div class="shell about-grid"><div><span class="eyebrow">The architect</span><h2 id="about-title">Hello, I’m Sneha.</h2><figure class="founder-photo"><img src="assets/photo-031.jpg" alt="Portrait of Sneha Reddy"><span class="photo-placeholder">Founder photo</span><button class="photo-change" type="button" data-photo="founder">Add / change photo</button><figcaption>Ar. Sneha Reddy</figcaption></figure></div><div><p>I’m a Hyderabad based architect with four years of experience across architecture and interiors. My work spans villa design, residential developments, clubhouses, and experience driven spaces.</p><p>I bring together creative thinking and technical coordination, from early design studies to detailed drawings and site collaboration.</p><div class="facts"><div class="fact"><b>Based in</b><span>Hyderabad, Telangana</span></div><div class="fact"><b>Focus</b><span>Architecture · Interiors · Coordination</span></div></div></div></div></section>
     <section class="contact" id="contact" aria-labelledby="contact-title"><div class="shell contact-grid"><div><span class="eyebrow" style="color:#c7a07f">Get in touch</span><h2 id="contact-title">Let’s build<br>something thoughtful.</h2><p>Have a project in mind or want to collaborate? I’d love to hear about it.</p></div><div class="contact-links"><a href="mailto:snehareddypatlolla05@gmail.com">snehareddypatlolla05@gmail.com</a><a href="tel:+919000332146">+91 90003 32146</a></div></div></section>
   </main>
-  <footer class="footer"><div class="shell"><span>© <span id="year">2026</span> Sneha Reddy Patlolla</span><a href="#top">Back to top ↑</a></div></footer>
-  
-  
-  
-  
+  <footer class="footer"><div class="shell"><span>© <span id="year">2026</span> Sneha Reddy Patlolla</span><a href="#top">Back to top ↑</a><button class="owner-login" id="owner-login" type="button">Owner login</button></div></footer>
+  <div class="editor-bar" hidden aria-label="Website editor"><button class="primary" id="edit-toggle" type="button">Edit website</button><button id="add-project" type="button" hidden="">Add project</button><button id="intro-upload" type="button" hidden="">Add intro video</button><button id="intro-preview" type="button" hidden="">Preview intro</button><button id="download-html" type="button" hidden="">Download editor backup</button><button id="download-public" type="button" hidden="">Download public site</button><button id="publish-folder" type="button" hidden="">Save to GitHub folder</button><button id="save-draft" type="button">Save draft</button><button class="primary" id="cloud-publish" type="button">Publish</button><button id="load-draft" type="button" hidden>Open saved draft</button><button id="cloud-signout" type="button">Sign out</button><span class="editor-status" id="editor-status" role="status" aria-live="polite"></span></div>
+  <input id="image-picker" type="file" accept="image/*" hidden="">
+  <input id="profile-picker" type="file" accept="image/*" hidden="">
+  <input id="intro-picker" type="file" accept="video/mp4,video/webm" hidden="">
   <div class="intro-screen" id="intro-screen" aria-label="Introduction" hidden=""><video id="intro-video" muted="" playsinline="" preload="metadata"></video><div class="intro-content"><span class="eyebrow">Architecture · Interiors · Design</span><h2>Ar. Sneha Reddy</h2><p>Designing spaces with purpose</p></div><button class="intro-play" id="intro-play" type="button" hidden="">Play intro video</button><button class="intro-skip" id="intro-skip" type="button">Skip intro</button></div>
-  
-  <section class="project-page" id="project-page" aria-labelledby="dialog-title" hidden=""><div class="dialog-inner"><div class="dialog-top"><span class="eyebrow">Selected project</span><button class="dialog-close" type="button">← All projects</button></div><h2 class="dialog-title" id="dialog-title"></h2><p class="dialog-meta"></p><p class="dialog-description"></p><div class="dialog-gallery"></div></div></section>
+  <input id="gallery-picker" type="file" accept="image/*" multiple="" hidden="">
+  <section class="project-page" id="project-page" aria-labelledby="dialog-title" hidden=""><div class="dialog-inner"><div class="dialog-top"><span class="eyebrow">Selected project</span><button class="dialog-close" type="button">← All projects</button></div><h2 class="dialog-title" id="dialog-title"></h2><p class="dialog-meta"></p><p class="dialog-description"></p><div class="dialog-gallery"></div><div class="dialog-actions"><button type="button" id="gallery-add">Add project photos</button><button type="button" id="cover-from-gallery">Use first photo as cover</button></div></div></section>
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project photo viewer" hidden=""><div class="lightbox-top"><span class="lightbox-caption">03</span><button type="button" id="lightbox-close">Close ✕</button></div><div class="lightbox-stage"><img alt="03" style="transform: translate3d(0px, 0px, 0px) scale(1);"></div><div class="lightbox-controls"><button type="button" id="lightbox-prev" aria-label="Previous photo">← Previous</button><span class="lightbox-count">1 / 29</span><button type="button" id="lightbox-next" aria-label="Next photo">Next →</button><button class="lightbox-zoom" type="button" id="lightbox-zoom">Zoom in</button></div></div>
   
-  <script>(() => {
-  const main = document.querySelector('main');
-  const page = document.getElementById('project-page');
-  const gallery = page.querySelector('.dialog-gallery');
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImage = lightbox.querySelector('.lightbox-stage img');
-  const stage = lightbox.querySelector('.lightbox-stage');
-  const zoom = document.getElementById('lightbox-zoom');
-  let activeCard = null, photoIndex = 0, touchX = null;
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  main.querySelectorAll('.project').forEach(card => {
-    if (!card.id) card.id = 'project-' + Math.random().toString(36).slice(2, 10);
-    const link = card.querySelector('.card-hit') || document.createElement('a');
-    link.className = 'card-hit';
-    link.href = '#project=' + encodeURIComponent(card.id);
-    link.setAttribute('aria-label', 'Open project: ' + card.querySelector('h3').textContent);
-    if (!link.isConnected) card.append(link);
-  });
-
-  function closePhoto() {
-    lightbox.hidden = true;
-    lightboxImage.removeAttribute('src');
-    stage.classList.remove('zoomed');
-    document.body.style.overflow = '';
-  }
-  function showPhoto(index) {
-    const photos = activeCard?.querySelectorAll('.project-gallery img') || [];
-    if (!photos.length) return;
-    photoIndex = (index + photos.length) % photos.length;
-    const photo = photos[photoIndex];
-    lightboxImage.src = photo.src;
-    lightboxImage.alt = photo.alt || 'Project photo';
-    lightbox.querySelector('.lightbox-caption').textContent = photo.alt || activeCard.querySelector('h3').textContent;
-    lightbox.querySelector('.lightbox-count').textContent = (photoIndex + 1) + ' / ' + photos.length;
-    stage.classList.remove('zoomed');
-    zoom.textContent = 'Zoom in';
-    lightbox.hidden = false;
-    document.body.style.overflow = 'hidden';
-    document.getElementById('lightbox-close').focus();
-  }
-  function route() {
-    if (!lightbox.hidden) closePhoto();
-    const hash = location.hash.slice(1);
-    const id = hash.startsWith('project=') ? decodeURIComponent(hash.slice(8)) : null;
-    const card = id && document.getElementById(id);
-    if (!card || !card.classList.contains('project')) {
-      activeCard = null;
-      main.hidden = false;
-      page.hidden = true;
-      document.title = 'Sneha Reddy Patlolla | Architect';
-      if (hash && !hash.startsWith('project=')) requestAnimationFrame(() => document.getElementById(hash)?.scrollIntoView());
-      return;
-    }
-    activeCard = card;
-    page.querySelector('.dialog-title').textContent = card.querySelector('h3').textContent;
-    page.querySelector('.dialog-meta').textContent = card.querySelector('.project-body p').textContent;
-    page.querySelector('.dialog-description').textContent = card.querySelector('.project-description').textContent;
-    gallery.replaceChildren();
-    const photos = card.querySelectorAll('.project-gallery img');
-    if (!photos.length) {
-      const empty = document.createElement('p');
-      empty.className = 'gallery-empty';
-      empty.textContent = 'Project photos coming soon.';
-      gallery.append(empty);
-    }
-    photos.forEach((photo, index) => {
-      const item = document.createElement('div');
-      item.className = 'gallery-item';
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'zoom-photo';
-      button.dataset.index = index;
-      button.setAttribute('aria-label', 'Open photo ' + (index + 1) + ' of ' + photos.length);
-      button.append(photo.cloneNode(true));
-      item.append(button);
-      gallery.append(item);
-    });
-    main.hidden = true;
-    page.hidden = false;
-    document.title = page.querySelector('.dialog-title').textContent + ' | Sneha Reddy Patlolla';
-    scrollTo(0, 0);
-  }
-
-  addEventListener('hashchange', route);
-  page.querySelector('.dialog-close').addEventListener('click', () => {
-    location.hash = 'work';
-    route();
-    requestAnimationFrame(() => document.getElementById('work').scrollIntoView());
-  });
-  gallery.addEventListener('click', event => {
-    const button = event.target.closest('.zoom-photo');
-    if (button) showPhoto(Number(button.dataset.index));
-  });
-  document.getElementById('lightbox-close').addEventListener('click', closePhoto);
-  document.getElementById('lightbox-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
-  document.getElementById('lightbox-next').addEventListener('click', () => showPhoto(photoIndex + 1));
-  zoom.addEventListener('click', () => {
-    const enlarged = stage.classList.toggle('zoomed');
-    zoom.textContent = enlarged ? 'Fit image' : 'Zoom in';
-    stage.scrollLeft = stage.scrollTop = 0;
-  });
-  document.addEventListener('keydown', event => {
-    if (lightbox.hidden) return;
-    if (event.key === 'Escape') closePhoto();
-    if (event.key === 'ArrowLeft') showPhoto(photoIndex - 1);
-    if (event.key === 'ArrowRight') showPhoto(photoIndex + 1);
-  });
-  lightbox.addEventListener('touchstart', event => { touchX = event.touches[0]?.clientX ?? null; }, {passive:true});
-  lightbox.addEventListener('touchend', event => {
-    if (touchX === null) return;
-    const dx = (event.changedTouches[0]?.clientX ?? touchX) - touchX;
-    if (!stage.classList.contains('zoomed') && Math.abs(dx) > 55) showPhoto(photoIndex + (dx < 0 ? 1 : -1));
-    touchX = null;
-  }, {passive:true});
-
-  const intro = document.getElementById('intro-screen');
-  const video = document.getElementById('intro-video');
-  const play = document.getElementById('intro-play');
-  let timer;
-  function closeIntro() {
-    clearTimeout(timer);
-    video.pause();
-    intro.hidden = true;
-    play.hidden = true;
-    document.body.style.overflow = '';
-  }
-  function showIntro() {
-    intro.hidden = false;
-    play.hidden = true;
-    document.body.style.overflow = 'hidden';
-    document.getElementById('intro-skip').focus();
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      video.hidden = true;
-      timer = setTimeout(closeIntro, 2800);
-    } else if (video.getAttribute('src')) {
-      video.hidden = false;
-      try {
-        const result = video.play();
-        if (result?.catch) result.catch(() => {
-          video.hidden = true;
-          play.hidden = false;
-          clearTimeout(timer);
-          timer = setTimeout(closeIntro, 10000);
-        });
-      } catch { video.hidden = true; play.hidden = false; }
-      timer = setTimeout(closeIntro, 10000);
-    } else timer = setTimeout(closeIntro, 4800);
-  }
-  document.getElementById('intro-skip').addEventListener('click', closeIntro);
-  video.addEventListener('ended', closeIntro);
-  video.addEventListener('error', () => {
-    video.hidden = true;
-    play.hidden = true;
-    clearTimeout(timer);
-    timer = setTimeout(closeIntro, 4800);
-  });
-  play.addEventListener('click', () => {
-    video.hidden = false;
-    try {
-      Promise.resolve(video.play()).then(() => {
-        play.hidden = true;
-        clearTimeout(timer);
-        timer = setTimeout(closeIntro, 10000);
-      }).catch(() => { video.hidden = true; });
-    } catch { video.hidden = true; }
-  });
-  route();
-  showIntro();
-})();
-</script>
+  
 
 
 
-<script id="portfolio-gesture-enhancement">
-(() => {
-  const viewer=document.getElementById('lightbox');
-  const stage=viewer?.querySelector('.lightbox-stage');
-  const photo=stage?.querySelector('img');
-  const button=document.getElementById('lightbox-zoom');
-  if(!viewer||!stage||!photo||!button) return;
-  let scale=1,x=0,y=0,start=null,previousDistance=0,previousCenter=null,moved=false,lastTap=0;
-  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
-  const maxScale=()=>Math.max(2,Math.min(5,Math.max(photo.naturalWidth/Math.max(photo.offsetWidth,1),photo.naturalHeight/Math.max(photo.offsetHeight,1))));
-  function bounds(){
-    const width=photo.offsetWidth;
-    const height=photo.offsetHeight;
-    return {x:Math.max(0,(width*scale-stage.clientWidth)/2),y:Math.max(0,(height*scale-stage.clientHeight)/2)};
-  }
-  function draw(){
-    const limit=bounds();x=clamp(x,-limit.x,limit.x);y=clamp(y,-limit.y,limit.y);
-    photo.style.transform=`translate3d(${x}px,${y}px,0) scale(${scale})`;
-    stage.classList.toggle('is-pannable',scale>1.01);
-    stage.classList.remove('zoomed');
-    button.textContent=scale>1.01?'Fit image':'Zoom in';
-  }
-  function reset(){scale=1;x=0;y=0;start=null;previousDistance=0;previousCenter=null;stage.classList.remove('is-gesturing');draw();}
-  const distance=(a,b)=>Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
-  const midpoint=(a,b)=>({x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2});
-  // Capture the controls before the older click handler, which only supports a fixed zoom.
-  button.addEventListener('click',event=>{
-    event.stopImmediatePropagation();
-    if(scale>1.01) reset();else {scale=2.25;draw();}
-  },true);
-  stage.addEventListener('touchstart',event=>{
-    event.stopPropagation();
-    stage.classList.add('is-gesturing');
-    if(event.touches.length===2){
-      previousDistance=distance(event.touches[0],event.touches[1]);
-      previousCenter=midpoint(event.touches[0],event.touches[1]);
-      start=null;moved=true;
-    }else if(event.touches.length===1){
-      const t=event.touches[0];start={x:t.clientX,y:t.clientY,lastX:t.clientX,lastY:t.clientY};moved=false;
-    }
-  },{passive:true});
-  stage.addEventListener('touchmove',event=>{
-    event.stopPropagation();
-    if(event.touches.length===2){
-      event.preventDefault();
-      const current=distance(event.touches[0],event.touches[1]);
-      const center=midpoint(event.touches[0],event.touches[1]);
-      if(previousDistance){
-        const next=clamp(scale*current/previousDistance,1,maxScale());
-        const ratio=next/scale;
-        const cx=center.x-stage.getBoundingClientRect().left-stage.clientWidth/2;
-        const cy=center.y-stage.getBoundingClientRect().top-stage.clientHeight/2;
-        x=cx-(cx-x)*ratio+(center.x-previousCenter.x);
-        y=cy-(cy-y)*ratio+(center.y-previousCenter.y);
-        scale=next;draw();
-      }
-      previousDistance=current;previousCenter=center;start=null;moved=true;
-    }else if(event.touches.length===1&&start){
-      const t=event.touches[0];
-      if(Math.hypot(t.clientX-start.x,t.clientY-start.y)>9) moved=true;
-      if(scale>1.01){event.preventDefault();x+=t.clientX-start.lastX;y+=t.clientY-start.lastY;draw();}
-      start.lastX=t.clientX;start.lastY=t.clientY;
-    }
-  },{passive:false});
-  stage.addEventListener('touchend',event=>{
-    event.stopPropagation();
-    if(event.touches.length===1){const t=event.touches[0];start={x:t.clientX,y:t.clientY,lastX:t.clientX,lastY:t.clientY};previousDistance=0;return;}
-    if(event.touches.length>0)return;
-    stage.classList.remove('is-gesturing');previousDistance=0;previousCenter=null;
-    if(scale<=1.01&&start){
-      const dx=(event.changedTouches[0]?.clientX??start.x)-start.x;
-      if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs((event.changedTouches[0]?.clientY??start.y)-start.y)*1.2)
-        document.getElementById(dx<0?'lightbox-next':'lightbox-prev')?.click();
-      else if(!moved){
-        const now=Date.now();if(now-lastTap<300){scale=2.25;draw();lastTap=0;}else lastTap=now;
-      }
-    }
-    start=null;
-  },{passive:true});
-  stage.addEventListener('touchcancel',()=>{stage.classList.remove('is-gesturing');start=null;previousDistance=0;},{passive:true});
-  stage.addEventListener('wheel',event=>{
-    if(viewer.hidden)return;
-    event.preventDefault();
-    const next=clamp(scale*Math.exp(-event.deltaY*(event.ctrlKey?.012:.0025)),1,maxScale());
-    const rect=stage.getBoundingClientRect(),cx=event.clientX-rect.left-rect.width/2,cy=event.clientY-rect.top-rect.height/2;
-    const ratio=next/scale;x=cx-(cx-x)*ratio;y=cy-(cy-y)*ratio;scale=next;draw();
-  },{passive:false});
-  let mouse=null;
-  stage.addEventListener('pointerdown',event=>{
-    if(event.pointerType!=='mouse'||scale<=1.01||event.button!==0)return;
-    mouse={x:event.clientX,y:event.clientY};stage.setPointerCapture(event.pointerId);stage.classList.add('is-gesturing');
-  });
-  stage.addEventListener('pointermove',event=>{
-    if(!mouse)return;x+=event.clientX-mouse.x;y+=event.clientY-mouse.y;mouse={x:event.clientX,y:event.clientY};draw();
-  });
-  const endDrag=()=>{mouse=null;stage.classList.remove('is-gesturing');};
-  stage.addEventListener('pointerup',endDrag);stage.addEventListener('pointercancel',endDrag);
-  stage.addEventListener('dblclick',event=>{event.preventDefault();if(scale>1.01)reset();else{scale=2.25;draw();}});
-  new MutationObserver(()=>reset()).observe(photo,{attributes:true,attributeFilter:['src']});
-  new MutationObserver(()=>{if(viewer.hidden)reset();}).observe(viewer,{attributes:true,attributeFilter:['hidden']});
-  viewer.querySelector('.lightbox-hint')?.remove();
-})();
-</script></body></html>
+<dialog id="login-dialog" aria-labelledby="login-title"><button id="login-close" class="dialog-dismiss" type="button" aria-label="Close login">×</button><span class="eyebrow">Portfolio owner</span><h2 id="login-title">Sign in to edit</h2><p>Editing access belongs to snehareddypatlolla05@gmail.com.</p><button id="google-signin" class="button" type="button">Continue with Google</button><p id="login-status" role="status"></p></dialog>
+<div id="cloud-notice" role="status" aria-live="polite" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js" defer></script>
+<script src="config.js" defer></script>
+<script src="editor.js" defer></script>
+<script src="gestures.js" defer></script>
+<script src="cloud.js" defer></script>
+</body></html>

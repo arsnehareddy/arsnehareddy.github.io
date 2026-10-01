@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Configure portfolio login</title><style>body{font:16px/1.5 system-ui;background:#edf0eb;color:#17211f;margin:0;padding:40px 20px}main{max-width:650px;background:white;padding:32px;margin:auto}label{display:block;margin-top:24px;font-weight:600}input{width:100%;padding:12px;box-sizing:border-box;margin-top:6px}button{margin-top:24px;padding:12px 20px;background:#17211f;border:0;color:white;font:600 16px system-ui}p{overflow-wrap:anywhere}</style></head><body><main><h1>Connect your portfolio</h1><p>Run backend.sql and enable Google login in Supabase first. Enter only the public values below. No password or secret is needed here.</p><label>Supabase project URL<input id="url" type="url" placeholder="https://your-project.supabase.co"></label><label>Publishable key or legacy anon key<input id="key" autocomplete="off"></label><button id="save">Download config.js</button><p id="status" role="status"></p></main><script>
+document.getElementById('save').addEventListener('click',()=>{
+ const status=document.getElementById('status');
+ try {
+  const url=new URL(document.getElementById('url').value.trim());
+  if(url.protocol!=='https:'||!url.hostname.endsWith('.supabase.co'))throw new Error('Use the HTTPS project URL from Supabase.');
+  const key=document.getElementById('key').value.trim();
+  if(key.startsWith('sb_secret_'))throw new Error('Use the publishable key, not a secret key.');
+  if(key.startsWith('eyJ')){
+   const encoded=key.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+   const payload=JSON.parse(atob(encoded));if(payload.role!=='anon')throw new Error('Use the anon public key. A service-role key must not be placed in the website.');
+  }else if(!key.startsWith('sb_publishable_'))throw new Error('Paste a Supabase publishable key or legacy anon key.');
+  const text='window.PORTFOLIO_CONFIG = '+JSON.stringify({supabaseUrl:url.origin,publishableKey:key,siteUrl:'https://arsnehareddy.github.io/'},null,2)+';\n';
+  const href=URL.createObjectURL(new Blob([text],{type:'text/javascript'}));const a=document.createElement('a');a.href=href;a.download='config.js';a.click();setTimeout(()=>URL.revokeObjectURL(href),30000);
+  status.textContent='Replace config.js in the website package with this downloaded file, then upload the site once.';
+ }catch(error){status.textContent=error.message;}
+});
+</script></body></html>
