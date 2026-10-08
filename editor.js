@@ -374,7 +374,7 @@
     });
     window.portfolioEditor = {
       files: pendingFiles,
-      createProject({category,name,description}) { if (!owner) return; const card=document.createElement("article");card.className="project";card.setAttribute("data-category",category);card.innerHTML='<div class="project-art"><span>Project photos coming soon</span></div><div class="project-body"><h3></h3><p>Project type · Add location</p><div class="project-foot">Add your role</div></div><div class="project-data"><p class="project-description"></p><div class="project-gallery"></div></div>';card.querySelector("h3").textContent=name;card.querySelector(".project-description").textContent=description||"Add project description, materials, detailing and photos.";grid().append(card);editing=true;setup();save();openProject(card);return card.id; },
+      createProject({category,name,description}) { if (!owner) return; const card=document.createElement("article");card.className="project";card.setAttribute("data-category",category);card.innerHTML='<div class="project-art"><span>Project photos coming soon</span></div><div class="project-body"><h3></h3><p>Project type · Add location</p><div class="project-foot">Add your role</div></div><div class="project-data"><p class="project-description"></p><div class="project-gallery"></div></div>';card.querySelector("h3").textContent=name;card.querySelector(".project-description").textContent=description||"Add project description, materials, detailing and photos.";grid().append(card);editing=true;setup();openProject(card);save();return card.id; },
       setOwner(value) { if (owner === value) return; owner = value; editing = false; setup(); if (activeCard) renderGallery(); },
       freeze(value) {
         if (value) { editing = false; setup(); }

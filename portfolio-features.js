@@ -282,14 +282,14 @@
   document.body.append(form);let submit=null;
   form.querySelector('.cancel').onclick=()=>form.close();
   form.querySelector('form').onsubmit=event=>{event.preventDefault();if(!owner||frozen)return;const name=form.querySelector('input').value.trim();if(!name)return;submit?.(name,form.querySelector('textarea').value.trim());form.close();};
-  function ask(title,callback){form.querySelector('h2').textContent=title;form.querySelector('form').reset();submit=callback;form.showModal();form.querySelector('input').focus();}
+  form.querySelector('button[type=submit]').onclick=event=>{if(form.querySelector('form').reportValidity())form.querySelector('form').onsubmit(event);else event.preventDefault();}; form.querySelector('input').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();form.querySelector('button[type=submit]').click();}}); function ask(title,callback){form.querySelector('h2').textContent=title;form.querySelector('form').reset();submit=callback;form.showModal();form.querySelector('input').focus();}
   const categories=()=>[...main.querySelectorAll('.project-category')];
   const cards=()=>[...main.querySelectorAll('.project')];
   const group=id=>categories().find(category=>category.id===id);
   function changed(){window.dispatchEvent(new Event('portfolio:change'));render();}
   function link(text,href){const a=document.createElement('a');a.textContent=text;a.href=href;return a;}
   function button(text,action){const b=document.createElement('button');b.type='button';b.textContent=text;b.disabled=frozen;b.onclick=action;return b;}
-  function createType(){ask('Add a project type',(name,description)=>{const item=document.createElement('article');item.className='project-category';item.id='category-'+crypto.randomUUID();const title=document.createElement('h3'),p=document.createElement('p');title.textContent=name;p.textContent=description||'Explore projects in this collection.';item.append(title,p);main.querySelector('.project-categories').append(item);changed();location.hash='category='+item.id;});}
+  function createType(){ask('Add a project type',(name,description)=>{const item=document.createElement('article');item.className='project-category';item.id='category-'+(crypto.randomUUID?.() || Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10));const title=document.createElement('h3'),p=document.createElement('p');title.textContent=name;p.textContent=description||'Explore projects in this collection.';item.append(title,p);main.querySelector('.project-categories').append(item);location.hash='category='+item.id;changed();});}
   function createProject(id){ask('Add a project to '+group(id).querySelector('h3').textContent,(name,description)=>editor.createProject({category:id,name,description}));}
   function render(){
     const work=main.querySelector('#work'),grid=main.querySelector('.project-grid');if(!work||!grid)return;
@@ -336,5 +336,7 @@
   addEventListener('portfolio:change',render);
   render();
 })();
+
+
 
 
