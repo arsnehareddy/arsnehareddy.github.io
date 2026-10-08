@@ -246,14 +246,14 @@
   function line(a,b,alpha=.18){ctx.strokeStyle=`rgba(91,99,88,${alpha})`;ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();}
   function draw(){
     ctx.clearRect(0,0,width,height);
-    const angle=-.65+Math.sin(elapsed*.075)*.11+Math.min(scrollY/Math.max(1,document.body.scrollHeight),1)*.25;
+    const angle=-.65+elapsed*.18+Math.min(scrollY/Math.max(1,document.body.scrollHeight),1)*.25;
     ctx.lineWidth=.7;
     for(let i=-8;i<=8;i++){line(project(i,0,-7,angle),project(i,0,7,angle),.075);line(project(-8,0,i,angle),project(8,0,i,angle),.075);}
-    blocks.forEach(([x,y,z,w,h,d],index)=>{
+    blocks.forEach(([x,y,z,w,h,d],index)=>{ y+=Math.sin(elapsed*.7+index*.8)*.2;
       const p=[[x,y,z],[x+w,y,z],[x+w,y,z+d],[x,y,z+d],[x,y+h,z],[x+w,y+h,z],[x+w,y+h,z+d],[x,y+h,z+d]].map(v=>project(...v,angle));
       ctx.fillStyle=index%2?'rgba(143,151,130,.065)':'rgba(170,155,136,.08)';
       [[0,1,5,4],[1,2,6,5],[4,5,6,7]].forEach(face=>{ctx.beginPath();face.forEach((n,i)=>i?ctx.lineTo(...p[n]):ctx.moveTo(...p[n]));ctx.closePath();ctx.fill();});
-      [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b])=>line(p[a],p[b],.24));
+      [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b])=>line(p[a],p[b],.4));
       for(let floor=.45;floor<h;floor+=.45){line(project(x,y+floor,z,angle),project(x+w,y+floor,z,angle),.12);line(project(x+w,y+floor,z,angle),project(x+w,y+floor,z+d,angle),.12);}
       for(let bay=.42;bay<w;bay+=.42)line(project(x+bay,y,z,angle),project(x+bay,y+h,z,angle),.1);
     });
@@ -270,3 +270,4 @@
   addEventListener('resize',resize);addEventListener('scroll',()=>{if(paused)draw();},{passive:true});
   resize();sync();
 })();
+
