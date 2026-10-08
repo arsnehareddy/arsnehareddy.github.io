@@ -19,14 +19,17 @@
   // No scripts, event handlers, embeds, styles, or executable URL schemes are retained.
   function sanitizeHTML(html, pending = false) {
     const template = document.createElement('template'); template.innerHTML = html;
-    const allowed = new Set('div section article span p h1 h2 h3 h4 h5 br em strong b i u figure figcaption img a button ul ol li'.split(' '));
+    const allowed = new Set('div section article span p h1 h2 h3 h4 h5 br em strong b i u figure figcaption img a button ul ol li video source'.split(' '));
     const blocked = new Set('script style iframe object embed link meta base form input textarea select svg math'.split(' '));
     template.content.querySelectorAll('*').forEach(element => {
       const tag = element.tagName.toLowerCase();
       if (!allowed.has(tag)) { if (blocked.has(tag)) element.remove(); else element.replaceWith(...element.childNodes); return; }
       [...element.attributes].forEach(attribute => {
         const name = attribute.name.toLowerCase(), value = attribute.value;
-        const accepted = ['class','id','alt','title','href','src','type','role','data-photo'].includes(name) || name.startsWith('aria-');
+        const accepted = ['class','id','alt','title','href','src','type','role','data-photo'].includes(name) || name.startsWith('aria-') || (tag === 'video' && ['controls','playsinline','preload'].includes(name));
+        if (tag === 'video' && ['controls','playsinline'].includes(name)) { element.setAttribute(name,''); return; }
+        if (tag === 'video' && name === 'preload') { element.setAttribute(name,'metadata'); return; }
+        if (tag === 'source' && name === 'type' && !['video/mp4','video/webm'].includes(value)) { element.removeAttribute(name); return; }
         if (!accepted) { element.removeAttribute(name); return; }
         if (name === 'href' || name === 'src') {
           try {
@@ -37,7 +40,12 @@
         }
       });
     });
-    template.content.querySelectorAll('.card-tools,.hint,#experience').forEach(element => element.remove());
+    template.content.querySelectorAll('.card-tools,.hint,#experience,.video-owner-tools,.video-feedback').forEach(element => element.remove());
+    template.content.querySelectorAll('video').forEach(video => {
+      video.setAttribute('controls','');
+      video.setAttribute('playsinline','');
+      video.setAttribute('preload','metadata');
+    });
     return template.innerHTML;
   }
   function validateContent(content) {
@@ -99,11 +107,11 @@
     const snapshot = editor.snapshot();
     const template = document.createElement('template'); template.innerHTML = sanitizeHTML(snapshot.mainHTML,true);
     const seen = new Map(); let count = 0;
-    for (const image of template.content.querySelectorAll('img[src]')) {
-      const source = image.getAttribute('src');
+    for (const media of template.content.querySelectorAll('img[src],video[src],video source[src]')) {
+      const source = media.getAttribute('src');
       if (/^(blob:|data:)/.test(source)) {
-        if (!seen.has(source)) { status.textContent = 'Uploading original photo '+(++count)+'…'; seen.set(source,await uploadOriginal(source)); }
-        image.setAttribute('src',seen.get(source));
+        if (!seen.has(source)) { status.textContent = 'Uploading original media '+(++count)+'…'; seen.set(source,await uploadOriginal(source)); }
+        media.setAttribute('src',seen.get(source));
       }
     }
     let introSrc = snapshot.introSrc;
