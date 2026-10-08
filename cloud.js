@@ -52,7 +52,7 @@
     if (!content || typeof content.mainHTML !== 'string' || !content.mainHTML.includes('project-grid')) throw new Error('The saved portfolio content is incomplete.');
     let introSrc = typeof content.introSrc === 'string' ? content.introSrc : '';
     if (introSrc) { const url = new URL(introSrc,location.href); if (!['http:','https:'].includes(url.protocol)) introSrc = ''; }
-    return {mainHTML:sanitizeHTML(content.mainHTML),introSrc};
+    return {mainHTML:sanitizeHTML(content.mainHTML),introSrc,...(typeof content.brandHTML==='string'?{brandHTML:sanitizeHTML(content.brandHTML)}:{})};
   }
   function showPublished(content) { const safe = validateContent(content); editor.loadContent(safe); lastPublished = safe; }
   window.addEventListener('portfolio:change', () => { if (owner) dirty = true; });
@@ -105,9 +105,9 @@
   }
   async function prepareContent() {
     const snapshot = editor.snapshot();
-    const template = document.createElement('template'); template.innerHTML = sanitizeHTML(snapshot.mainHTML,true);
+    const template = document.createElement('template'); template.innerHTML = sanitizeHTML(snapshot.mainHTML,true); const brand=document.createElement('template');brand.innerHTML=sanitizeHTML(snapshot.brandHTML||document.querySelector('.brand').innerHTML,true);
     const seen = new Map(); let count = 0;
-    for (const media of template.content.querySelectorAll('img[src],video[src],video source[src]')) {
+    for (const media of [...template.content.querySelectorAll('img[src],video[src],video source[src]'),...brand.content.querySelectorAll('img[src]')]) {
       const source = media.getAttribute('src');
       if (/^(blob:|data:)/.test(source)) {
         if (!seen.has(source)) { status.textContent = 'Uploading original media '+(++count)+'…'; seen.set(source,await uploadOriginal(source)); }
@@ -116,7 +116,7 @@
     }
     let introSrc = snapshot.introSrc;
     if (/^(blob:|data:)/.test(introSrc)) { status.textContent = 'Uploading original intro video…'; introSrc = await uploadOriginal(introSrc); }
-    return validateContent({mainHTML:template.innerHTML,introSrc});
+    return validateContent({mainHTML:template.innerHTML,brandHTML:brand.innerHTML,introSrc});
   }
   async function writeContent(kind) {
     if (!owner || busy) return;

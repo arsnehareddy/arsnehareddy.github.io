@@ -79,7 +79,7 @@
       } else introTimer = setTimeout(closeIntro, 4800);
     }
     function editables() {
-      return main.querySelectorAll('.hero-copy .eyebrow,.hero h1,.hero-copy p,.intro-lead,.intro-side p,.section-top h2,.section-top p,.project h3,.project-body p,.project-foot,.service h3,.service p,.about p,.fact span,.contact h2,.contact p,.contact-links a,.notebook-grid h3,.notebook-grid p,.process-grid h3,.process-grid p,.study-note,.diagram-label');
+      return main.querySelectorAll('h1,h2,h3,p,.eyebrow,.hero-copy .eyebrow,.hero h1,.hero-copy p,.intro-lead,.intro-side p,.section-top h2,.section-top p,.project h3,.project-body p,.project-foot,.service h3,.service p,.about p,.fact span,.contact h2,.contact p,.contact-links a,.notebook-grid h3,.notebook-grid p,.process-grid h3,.process-grid p,.study-note,.diagram-label');
     }
     function setup() {
       editables().forEach(el => {
@@ -141,7 +141,7 @@
         zoom.append(img);
         const remove = document.createElement('button');
         remove.className = 'remove-photo'; remove.type = 'button'; remove.textContent = 'Remove photo'; remove.dataset.index = index;
-        item.append(zoom,remove); dialogGallery.append(item);
+        const earlier=document.createElement('button'),later=document.createElement('button'),cover=document.createElement('button');earlier.type=later.type=cover.type='button';earlier.className=later.className=cover.className='photo-order-control';earlier.textContent='Move earlier';later.textContent='Move later';cover.textContent='Use as cover';earlier.onclick=()=>{if(!owner)return;const previous=photo.previousElementSibling;if(previous){previous.before(photo);renderGallery();save();}};later.onclick=()=>{if(!owner)return;const next=photo.nextElementSibling;if(next){next.after(photo);renderGallery();save();}};cover.onclick=()=>{if(!owner)return;activeCard.querySelector('.project-art').replaceChildren(photo.cloneNode());save();};item.append(zoom,remove,earlier,later,cover); dialogGallery.append(item);
       });
     }
     function showLightbox(index) {
@@ -374,6 +374,7 @@
     });
     window.portfolioEditor = {
       files: pendingFiles,
+      enableEditing(){if(!owner)return;editing=true;setup();renderGallery();},
       createProject({category,name,description}) { if (!owner) return; const card=document.createElement("article");card.className="project";card.setAttribute("data-category",category);card.innerHTML='<div class="project-art"><span>Project photos coming soon</span></div><div class="project-body"><h3></h3><p>Project type · Add location</p><div class="project-foot">Add your role</div></div><div class="project-data"><p class="project-description"></p><div class="project-gallery"></div></div>';card.querySelector("h3").textContent=name;card.querySelector(".project-description").textContent=description||"Add project description, materials, detailing and photos.";grid().append(card);editing=true;setup();openProject(card);save();return card.id; },
       setOwner(value) { if (owner === value) return; owner = value; editing = false; setup(); if (activeCard) renderGallery(); },
       freeze(value) {
