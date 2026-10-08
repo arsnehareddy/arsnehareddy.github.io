@@ -393,3 +393,5 @@
   render();
 })();
 
+(() => {const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');observer.unobserve(entry.target);}}),{threshold:.08});function setup(){document.querySelectorAll('.intro-grid,.category-card,.notebook-grid,.process-grid article,.about-grid').forEach(el=>{if(!el.classList.contains('revealed')){el.classList.add('reference-reveal');observer.observe(el);}});}const previousLoad=window.portfolioEditor.loadContent;window.portfolioEditor.loadContent=function(content){const result=previousLoad.call(this,content);setup();return result;};setup();window.addEventListener('portfolio:change',setup);window.addEventListener('hashchange',setup);})();
+
