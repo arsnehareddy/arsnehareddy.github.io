@@ -224,3 +224,49 @@
 
 
 (() => {function expand(){const hero=document.querySelector('.hero'),image=document.querySelector('.hero-visual');if(!hero||!image)return;const progress=Math.min(1,Math.max(0,scrollY/(innerHeight*.8)));image.style.setProperty('--studio-media-width',(70+30*progress)+'%');}addEventListener('scroll',expand,{passive:true});addEventListener('resize',expand);expand();})();
+
+/* Decorative architecture drawing; generated locally, no external assets. */
+(() => {
+  if (document.querySelector('.architecture-backdrop')) return;
+  const canvas = document.createElement('canvas');
+  canvas.className = 'architecture-backdrop';
+  canvas.setAttribute('aria-hidden','true');
+  document.body.prepend(canvas);
+  const button = document.createElement('button');
+  button.className = 'architecture-motion-toggle';
+  button.type = 'button';
+  document.body.append(button);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {canvas.remove();button.remove();return;}
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  let paused = reduce.matches, width=0,height=0,frame=0,elapsed=0,last=0;
+  const blocks = [[-4,0,-2,2.6,3.5,2],[-1.1,0,-2,2.5,1.6,3.5],[1.8,0,-1.5,1.3,5,2],[-2.9,0,1.2,2,1,1.8],[.1,0,2,2.3,2.6,1.8],[3.5,0,1,1.5,2,1.5]];
+  function resize(){width=innerWidth;height=innerHeight;const ratio=Math.min(devicePixelRatio||1,2);canvas.width=width*ratio;canvas.height=height*ratio;ctx.setTransform(ratio,0,0,ratio,0,0);draw();}
+  function project(x,y,z,angle){const a=x*Math.cos(angle)-z*Math.sin(angle),b=x*Math.sin(angle)+z*Math.cos(angle);const scale=Math.max(width,height)*.083;return [width*.64+a*scale,height*.63+(b*.43-y)*scale];}
+  function line(a,b,alpha=.18){ctx.strokeStyle=`rgba(91,99,88,${alpha})`;ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();}
+  function draw(){
+    ctx.clearRect(0,0,width,height);
+    const angle=-.65+Math.sin(elapsed*.075)*.11+Math.min(scrollY/Math.max(1,document.body.scrollHeight),1)*.25;
+    ctx.lineWidth=.7;
+    for(let i=-8;i<=8;i++){line(project(i,0,-7,angle),project(i,0,7,angle),.075);line(project(-8,0,i,angle),project(8,0,i,angle),.075);}
+    blocks.forEach(([x,y,z,w,h,d],index)=>{
+      const p=[[x,y,z],[x+w,y,z],[x+w,y,z+d],[x,y,z+d],[x,y+h,z],[x+w,y+h,z],[x+w,y+h,z+d],[x,y+h,z+d]].map(v=>project(...v,angle));
+      ctx.fillStyle=index%2?'rgba(143,151,130,.065)':'rgba(170,155,136,.08)';
+      [[0,1,5,4],[1,2,6,5],[4,5,6,7]].forEach(face=>{ctx.beginPath();face.forEach((n,i)=>i?ctx.lineTo(...p[n]):ctx.moveTo(...p[n]));ctx.closePath();ctx.fill();});
+      [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b])=>line(p[a],p[b],.24));
+      for(let floor=.45;floor<h;floor+=.45){line(project(x,y+floor,z,angle),project(x+w,y+floor,z,angle),.12);line(project(x+w,y+floor,z,angle),project(x+w,y+floor,z+d,angle),.12);}
+      for(let bay=.42;bay<w;bay+=.42)line(project(x+bay,y,z,angle),project(x+bay,y+h,z,angle),.1);
+    });
+    ctx.strokeStyle='rgba(91,99,88,.09)';ctx.lineWidth=.7;
+    const radius=Math.min(width,height)*.39;
+    ctx.beginPath();ctx.ellipse(width*.64,height*.63,radius,radius*.44,angle,0,Math.PI*2);ctx.stroke();
+    for(const [x,y] of [[width*.06,height*.16],[width*.94,height*.84]]){line([x-9,y],[x+9,y],.28);line([x,y-9],[x,y+9],.28);}
+  }
+  function tick(now){frame=0;if(paused||document.hidden)return;if(now-last>=40){elapsed+=Math.min((now-last)/1000,.1);last=now;draw();}frame=requestAnimationFrame(tick);}
+  function sync(){button.textContent=paused?'Play background':'Pause background';button.setAttribute('aria-pressed',String(paused));cancelAnimationFrame(frame);frame=0;last=performance.now();draw();if(!paused&&!document.hidden)frame=requestAnimationFrame(tick);}
+  button.addEventListener('click',()=>{paused=!paused;sync();});
+  reduce.addEventListener('change',()=>{paused=reduce.matches;sync();});
+  document.addEventListener('visibilitychange',sync);
+  addEventListener('resize',resize);addEventListener('scroll',()=>{if(paused)draw();},{passive:true});
+  resize();sync();
+})();
