@@ -26,7 +26,7 @@
       if (!allowed.has(tag)) { if (blocked.has(tag)) element.remove(); else element.replaceWith(...element.childNodes); return; }
       [...element.attributes].forEach(attribute => {
         const name = attribute.name.toLowerCase(), value = attribute.value;
-        const accepted = ['class','id','alt','title','href','src','type','role','data-photo'].includes(name) || name.startsWith('aria-') || (tag === 'video' && ['controls','playsinline','preload'].includes(name));
+        const accepted = ['class','id','alt','title','href','src','type','role','data-photo','data-category'].includes(name) || name.startsWith('aria-') || (tag === 'video' && ['controls','playsinline','preload'].includes(name));
         if (tag === 'video' && ['controls','playsinline'].includes(name)) { element.setAttribute(name,''); return; }
         if (tag === 'video' && name === 'preload') { element.setAttribute(name,'metadata'); return; }
         if (tag === 'source' && name === 'type' && !['video/mp4','video/webm'].includes(value)) { element.removeAttribute(name); return; }

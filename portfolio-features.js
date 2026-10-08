@@ -271,3 +271,70 @@
   resize();sync();
 })();
 
+
+(() => {
+  const editor=window.portfolioEditor,main=document.querySelector('main');
+  if(!editor||!main)return;
+  let owner=false,selected='',frozen=false;
+  const page=document.createElement('section');page.className='category-page';page.hidden=true;document.body.insertBefore(page,document.querySelector('.footer'));document.body.insertBefore(document.querySelector('#project-page'),document.querySelector('.footer'));
+  const form=document.createElement('dialog');form.className='category-form';
+  form.innerHTML='<form><h2></h2><label>Name<input name="name" required maxlength="120"></label><label>Description<textarea name="description" rows="3" maxlength="2000"></textarea></label><div><button type="button" class="cancel">Cancel</button><button type="submit">Create</button></div></form>';
+  document.body.append(form);let submit=null;
+  form.querySelector('.cancel').onclick=()=>form.close();
+  form.querySelector('form').onsubmit=event=>{event.preventDefault();if(!owner||frozen)return;const name=form.querySelector('input').value.trim();if(!name)return;submit?.(name,form.querySelector('textarea').value.trim());form.close();};
+  function ask(title,callback){form.querySelector('h2').textContent=title;form.querySelector('form').reset();submit=callback;form.showModal();form.querySelector('input').focus();}
+  const categories=()=>[...main.querySelectorAll('.project-category')];
+  const cards=()=>[...main.querySelectorAll('.project')];
+  const group=id=>categories().find(category=>category.id===id);
+  function changed(){window.dispatchEvent(new Event('portfolio:change'));render();}
+  function link(text,href){const a=document.createElement('a');a.textContent=text;a.href=href;return a;}
+  function button(text,action){const b=document.createElement('button');b.type='button';b.textContent=text;b.disabled=frozen;b.onclick=action;return b;}
+  function createType(){ask('Add a project type',(name,description)=>{const item=document.createElement('article');item.className='project-category';item.id='category-'+crypto.randomUUID();const title=document.createElement('h3'),p=document.createElement('p');title.textContent=name;p.textContent=description||'Explore projects in this collection.';item.append(title,p);main.querySelector('.project-categories').append(item);changed();location.hash='category='+item.id;});}
+  function createProject(id){ask('Add a project to '+group(id).querySelector('h3').textContent,(name,description)=>editor.createProject({category:id,name,description}));}
+  function render(){
+    const work=main.querySelector('#work'),grid=main.querySelector('.project-grid');if(!work||!grid)return;
+    work.classList.add('categorized');
+    work.querySelector('.category-ui')?.remove();const ui=document.createElement('div');ui.className='category-ui';
+    if(owner){const tools=document.createElement('div');tools.className='category-owner-tools';tools.append(button('＋ Add project type',createType));ui.append(tools);}
+    const collection=document.createElement('div');collection.className='category-grid';
+    categories().forEach((category,index)=>{
+      const children=cards().filter(card=>card.getAttribute('data-category')===category.id),cover=children.map(card=>card.querySelector('.project-art img')).find(Boolean);
+      const a=link('','#category='+category.id);a.className='category-card';
+      const art=document.createElement('div');art.className='category-art';
+      if(cover){const img=cover.cloneNode();img.alt=category.querySelector('h3').textContent+' projects';art.append(img);}else{const mark=document.createElement('span');mark.textContent=category.querySelector('h3').textContent;art.append(mark);}
+      const number=document.createElement('span');number.className='category-number';number.textContent=String(index+1).padStart(2,'0');
+      const h=document.createElement('h3');h.textContent=category.querySelector('h3').textContent;
+      const count=document.createElement('p');count.textContent=children.length+' '+(children.length===1?'project':'projects')+' / Explore collection ↗';a.append(art,number,h,count);collection.append(a);
+    });ui.append(collection);grid.before(ui);route();
+  }
+  function route(){
+    const hash=location.hash.slice(1),id=hash.startsWith('category=')?hash.slice(9):'';selected=id;
+    const category=group(id);page.hidden=!category;
+    if(category){
+      main.hidden=true;document.querySelector('#project-page').hidden=true;page.replaceChildren();
+      const shell=document.createElement('div');shell.className='shell';shell.append(link('← All project types','#work'));
+      const heading=document.createElement('h1');heading.textContent=category.querySelector('h3').textContent;const description=document.createElement('p');description.className='category-description';description.textContent=category.querySelector('p').textContent;shell.append(heading,description);
+      if(owner){const tools=document.createElement('div');tools.className='category-owner-tools';tools.append(button('＋ Add project',()=>createProject(id)));shell.append(tools);}
+      const collection=document.createElement('div');collection.className='subcategory-grid';
+      cards().filter(card=>card.getAttribute('data-category')===id).forEach(card=>{
+        const item=document.createElement('article');item.className='subcategory-card';const a=link('','#project='+card.id);const art=document.createElement('div');art.className='subcategory-art';const image=card.querySelector('.project-art img');if(image)art.append(image.cloneNode());else{const span=document.createElement('span');span.textContent='Project photos coming soon';art.append(span);}
+        const h=document.createElement('h2');h.textContent=card.querySelector('h3').textContent;const p=document.createElement('p');p.textContent=card.querySelector('.project-body p').textContent;a.append(art,h,p);item.append(a);
+        if(owner){const label=document.createElement('label');label.textContent='Project type';const select=document.createElement('select');select.setAttribute('aria-label','Move '+h.textContent+' to project type');select.disabled=frozen;categories().forEach(c=>{const option=document.createElement('option');option.value=c.id;option.textContent=c.querySelector('h3').textContent;select.append(option);});select.value=id;select.onchange=()=>{card.setAttribute('data-category',select.value);changed();};label.append(select);item.append(label);}collection.append(item);
+      });if(!collection.children.length){const empty=document.createElement('p');empty.textContent=owner?'No projects yet. Add your first project above.':'Projects coming soon.';collection.append(empty);}shell.append(collection);page.append(shell);document.title=heading.textContent+' | Sneha Reddy Patlolla';
+    }
+    const card=hash.startsWith('project=')?document.getElementById(decodeURIComponent(hash.slice(8))):null;
+    const close=document.querySelector('.dialog-close');if(card){const c=group(card.getAttribute('data-category'));close.textContent=c?'← '+c.querySelector('h3').textContent:'← All project types';}
+    const add=document.getElementById('add-project');add.textContent='Add project type';
+  }
+  document.getElementById('add-project').addEventListener('click',event=>{event.stopImmediatePropagation();if(owner&&!frozen)createType();},true);
+  document.querySelector('.dialog-close').addEventListener('click',event=>{const hash=location.hash.slice(1);const card=hash.startsWith('project=')?document.getElementById(decodeURIComponent(hash.slice(8))):null;const id=card?.getAttribute('data-category');if(group(id)){event.stopImmediatePropagation();location.hash='category='+id;}},true);
+  const setOwner=editor.setOwner;editor.setOwner=function(value){owner=value===true;const result=setOwner.call(this,value);render();return result;};
+  const load=editor.loadContent;editor.loadContent=function(content){const result=load.call(this,content);render();return result;};
+  const snapshot=editor.snapshot;editor.snapshot=function(){const content=snapshot.call(this);const t=document.createElement('template');t.innerHTML=content.mainHTML;t.content.querySelectorAll('.category-ui').forEach(el=>el.remove());content.mainHTML=t.innerHTML;return content;};
+  const freeze=editor.freeze;editor.freeze=function(value){frozen=!!value;const result=freeze.call(this,value);render();return result;};
+  addEventListener('hashchange',()=>{route();if(selected)scrollTo({top:0,behavior:'instant'});});
+  addEventListener('portfolio:change',render);
+  render();
+})();
+
+
