@@ -162,7 +162,7 @@
   const main = document.querySelector('main');
   if (!main || !window.portfolioEditor) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let paused = reduced.matches, active = '', scheduled = false;
+  let paused = reduced.matches, active = '', scheduled = false, manualIndex = null;
   const originalSnapshot = window.portfolioEditor.snapshot;
   window.portfolioEditor.snapshot = function() {
     const content = originalSnapshot.call(this);
@@ -177,7 +177,7 @@
     if (!section || section.querySelector('.motion-stage')) return;
     const stage = document.createElement('div');
     stage.className = 'motion-stage'; active = '';
-    stage.innerHTML = '<div class="motion-screen"><img class="motion-photo" alt="" aria-hidden="true"><video class="motion-film" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video><div class="motion-shade"></div><div class="motion-caption"><span class="motion-kicker">A study in space / Scroll to explore</span><h3 class="motion-title"></h3><span class="motion-count"></span></div><button type="button" class="motion-toggle">Pause motion</button></div>';
+    stage.innerHTML = '<div class="motion-screen"><img class="motion-photo" alt="" aria-hidden="true"><video class="motion-film" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video><div class="motion-shade"></div><div class="motion-caption"><span class="motion-kicker">A study in space / Scroll to explore</span><h3 class="motion-title"></h3><span class="motion-count"></span></div><button type="button" class="motion-toggle" aria-label="Pause motion"><span class="motion-control-icon" aria-hidden="true">Ⅱ</span><span class="motion-control-label">Pause motion</span></button><div class="motion-pagination" aria-label="Architectural slides"></div></div>';
     section.querySelector('.video-grid').before(stage);
     stage.querySelector('button').addEventListener('click', () => { paused = !paused; update(); });
   }
@@ -190,12 +190,15 @@
     const studies = [
       {src:'assets/photo-002.jpg',title:'Light. Material. Space.'},
       {src:'assets/photo-012.jpg',title:'Another perspective.'},
-      {src:'assets/photo-001.jpg',title:'From idea to detail.'}
+      {src:'assets/photo-001.jpg',title:'From idea to detail.'},
+      {src:'assets/photo-003.jpg',title:'A considered composition.'},
+      {src:'assets/photo-006.jpg',title:'Texture and atmosphere.'},
+      {src:'assets/photo-010.jpg',title:'Details in dialogue.'}
     ];
     const collection = films.length ? films : studies;
     const rect = stage.getBoundingClientRect();
     const progress = Math.max(0,Math.min(.999,-rect.top / Math.max(1,rect.height-innerHeight*.7)));
-    const index = Math.min(collection.length-1,Math.floor(progress*collection.length));
+    const index = Math.min(collection.length-1,manualIndex ?? Math.floor(progress*collection.length));
     const item = collection[index], video = stage.querySelector('video'), photo = stage.querySelector('img');
     const key = (films.length?'video:':'photo:')+item.src;
     if (key !== active) {
@@ -209,13 +212,18 @@
     video.hidden = !films.length;
     photo.hidden = !!films.length;
     stage.classList.toggle('motion-paused',paused);
-    const label = paused?'Play motion':'Pause motion'; if (stage.querySelector('button').textContent !== label) stage.querySelector('button').textContent = label; const hero = main.querySelector('.hero-visual img'); if (hero) hero.style.animationPlayState = paused?'paused':'running';
+    const control = stage.querySelector('.motion-toggle'), label = paused?'Play motion':'Pause motion';
+    if(control.querySelector('.motion-control-label').textContent!==label){control.querySelector('.motion-control-label').textContent=label;control.querySelector('.motion-control-icon').textContent=paused?'▷':'Ⅱ';}
+    control.setAttribute('aria-label',label);control.style.setProperty('--motion-angle',((index+1)/collection.length*360)+'deg');
+    const pagination=stage.querySelector('.motion-pagination');
+    if(pagination.dataset.count!==String(collection.length)){pagination.replaceChildren();pagination.dataset.count=collection.length;collection.forEach((slide,i)=>{const dot=document.createElement('button');dot.type='button';dot.textContent=String(i+1).padStart(2,'0');dot.setAttribute('aria-label','Show architectural slide '+(i+1));dot.onclick=()=>{manualIndex=i;update();};pagination.append(dot);});}
+    [...pagination.children].forEach((dot,i)=>{dot.classList.toggle('selected',i===index);dot.setAttribute('aria-current',String(i===index));}); const hero = main.querySelector('.hero-visual img'); if (hero) hero.style.animationPlayState = paused?'paused':'running';
     stage.querySelector('button').setAttribute('aria-pressed',String(paused));
     const visible = rect.top < innerHeight && rect.bottom > 0 && !document.hidden;
     if (films.length && visible && !paused) video.play().catch(() => {});else video.pause();
   }
   function schedule() {if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;update();});}
-  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);
+  addEventListener('scroll',schedule,{passive:true});addEventListener('wheel',()=>{manualIndex=null;schedule();},{passive:true});addEventListener('touchmove',()=>{manualIndex=null;schedule();},{passive:true});addEventListener('resize',schedule);
   document.addEventListener('visibilitychange',schedule);
   reduced.addEventListener('change',()=>{paused=reduced.matches;schedule();});
   new MutationObserver(schedule).observe(main,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});
@@ -347,6 +355,7 @@
   addEventListener('portfolio:change',render);
   render();
 })();
+
 
 
 
