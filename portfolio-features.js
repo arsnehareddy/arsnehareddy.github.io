@@ -281,8 +281,8 @@
   form.innerHTML='<form><h2></h2><label>Name<input name="name" required maxlength="120"></label><label>Description<textarea name="description" rows="3" maxlength="2000"></textarea></label><div><button type="button" class="cancel">Cancel</button><button type="submit">Create</button></div></form>';
   document.body.append(form);let submit=null;
   form.querySelector('.cancel').onclick=()=>form.close();
-  form.querySelector('form').onsubmit=event=>{event.preventDefault();if(!owner||frozen)return;const name=form.querySelector('input').value.trim();if(!name)return;submit?.(name,form.querySelector('textarea').value.trim());form.close();};
-  form.querySelector('button[type=submit]').onclick=event=>{if(form.querySelector('form').reportValidity())form.querySelector('form').onsubmit(event);else event.preventDefault();}; form.querySelector('input').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();form.querySelector('button[type=submit]').click();}}); function ask(title,callback){form.querySelector('h2').textContent=title;form.querySelector('form').reset();submit=callback;form.showModal();form.querySelector('input').focus();}
+  form.querySelector('form').onsubmit=event=>{event.preventDefault();if(!owner||frozen)return;const name=form.querySelector('input').value.trim();if(!name)return;submit?.(name,form.querySelector('textarea').value.trim(),form.querySelector('.category-choice select')?.value);form.close();};
+  form.querySelector('button[type=submit]').onclick=event=>{if(form.querySelector('form').reportValidity())form.querySelector('form').onsubmit(event);else event.preventDefault();}; form.querySelector('input').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();form.querySelector('button[type=submit]').click();}}); const choice=document.createElement('label');choice.className='category-choice';choice.textContent='Project type';const typeSelect=document.createElement('select');choice.append(typeSelect);form.querySelector('form').insertBefore(choice,form.querySelector('form>div')); choice.hidden=true; function ask(title,callback,choose=false){choice.hidden=!choose;typeSelect.replaceChildren();categories().forEach(category=>{const option=document.createElement('option');option.value=category.id;option.textContent=category.querySelector('h3').textContent;typeSelect.append(option);});form.querySelector('h2').textContent=title;form.querySelector('form').reset();submit=callback;form.showModal();form.querySelector('input').focus();}
   const categories=()=>[...main.querySelectorAll('.project-category')];
   const cards=()=>[...main.querySelectorAll('.project')];
   const group=id=>categories().find(category=>category.id===id);
@@ -290,12 +290,12 @@
   function link(text,href){const a=document.createElement('a');a.textContent=text;a.href=href;return a;}
   function button(text,action){const b=document.createElement('button');b.type='button';b.textContent=text;b.disabled=frozen;b.onclick=action;return b;}
   function createType(){ask('Add a project type',(name,description)=>{const item=document.createElement('article');item.className='project-category';item.id='category-'+(crypto.randomUUID?.() || Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10));const title=document.createElement('h3'),p=document.createElement('p');title.textContent=name;p.textContent=description||'Explore projects in this collection.';item.append(title,p);main.querySelector('.project-categories').append(item);location.hash='category='+item.id;changed();});}
-  function createProject(id){ask('Add a project to '+group(id).querySelector('h3').textContent,(name,description)=>editor.createProject({category:id,name,description}));}
+  function createRootProject(){ask('Add project',(name,description,category)=>editor.createProject({category,name,description}),true);} function createProject(id){ask('Add a project to '+group(id).querySelector('h3').textContent,(name,description)=>editor.createProject({category:id,name,description}));}
   function render(){
     const work=main.querySelector('#work'),grid=main.querySelector('.project-grid');if(!work||!grid)return;
     work.classList.add('categorized');
     work.querySelector('.category-ui')?.remove();const ui=document.createElement('div');ui.className='category-ui';
-    if(owner){const tools=document.createElement('div');tools.className='category-owner-tools';tools.append(button('＋ Add project type',createType));ui.append(tools);}
+    if(owner){const tools=document.createElement('div');tools.className='category-owner-tools';tools.append(button('＋ Add project',createRootProject),button('＋ Add project type',createType));ui.append(tools);}
     const collection=document.createElement('div');collection.className='category-grid';
     categories().forEach((category,index)=>{
       const children=cards().filter(card=>card.getAttribute('data-category')===category.id),cover=children.map(card=>card.querySelector('.project-art img')).find(Boolean);
@@ -326,7 +326,7 @@
     const close=document.querySelector('.dialog-close');if(card){const c=group(card.getAttribute('data-category'));close.textContent=c?'← '+c.querySelector('h3').textContent:'← All project types';}
     const add=document.getElementById('add-project');add.textContent='Add project type';
   }
-  document.getElementById('add-project').addEventListener('click',event=>{event.stopImmediatePropagation();if(owner&&!frozen)createType();},true);
+  main.addEventListener('click',event=>{const link=event.target.closest('.category-card');if(link){event.preventDefault();event.stopImmediatePropagation();location.hash=link.getAttribute('href');}},true); document.getElementById('add-project').addEventListener('click',event=>{event.stopImmediatePropagation();if(owner&&!frozen)createType();},true);
   document.querySelector('.dialog-close').addEventListener('click',event=>{const hash=location.hash.slice(1);const card=hash.startsWith('project=')?document.getElementById(decodeURIComponent(hash.slice(8))):null;const id=card?.getAttribute('data-category');if(group(id)){event.stopImmediatePropagation();location.hash='category='+id;}},true);
   const setOwner=editor.setOwner;editor.setOwner=function(value){owner=value===true;const result=setOwner.call(this,value);render();return result;};
   const load=editor.loadContent;editor.loadContent=function(content){const result=load.call(this,content);render();return result;};
@@ -336,6 +336,7 @@
   addEventListener('portfolio:change',render);
   render();
 })();
+
 
 
 
