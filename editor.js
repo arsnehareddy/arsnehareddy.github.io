@@ -79,7 +79,7 @@
       } else introTimer = setTimeout(closeIntro, 4800);
     }
     function editables() {
-      return main.querySelectorAll('.hero-copy .eyebrow,.hero h1,.hero-copy p,.intro-lead,.intro-side p,.section-top h2,.section-top p,.project h3,.project-body p,.project-foot,.service h3,.service p,.about p,.fact span,.contact h2,.contact p,.contact-links a');
+      return main.querySelectorAll('.hero-copy .eyebrow,.hero h1,.hero-copy p,.intro-lead,.intro-side p,.section-top h2,.section-top p,.project h3,.project-body p,.project-foot,.service h3,.service p,.about p,.fact span,.contact h2,.contact p,.contact-links a,.notebook-grid h3,.notebook-grid p,.process-grid h3,.process-grid p,.study-note,.diagram-label');
     }
     function setup() {
       editables().forEach(el => {
@@ -402,3 +402,4 @@
     showIntro();
   })();
   
+
