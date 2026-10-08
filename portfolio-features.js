@@ -222,3 +222,5 @@
   update();
 })();
 
+
+(() => {function expand(){const hero=document.querySelector('.hero'),image=document.querySelector('.hero-visual');if(!hero||!image)return;const progress=Math.min(1,Math.max(0,scrollY/(innerHeight*.8)));image.style.setProperty('--studio-media-width',(70+30*progress)+'%');}addEventListener('scroll',expand,{passive:true});addEventListener('resize',expand);expand();})();
