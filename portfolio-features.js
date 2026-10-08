@@ -361,3 +361,35 @@
 
 
 
+(() => {
+  const editor=window.portfolioEditor,dialog=document.querySelector('#project-page'),main=document.querySelector('main');if(!editor||!dialog)return;
+  const host=document.createElement('div');host.className='project-work-sections';dialog.querySelector('.dialog-gallery').before(host);
+  let owner=false,frozen=false,timer;
+  function active(){const hash=location.hash.slice(1);return hash.startsWith('project=')?main.querySelector('#'+CSS.escape(decodeURIComponent(hash.slice(8)))):null;}
+  function notify(){window.dispatchEvent(new Event('portfolio:change'));}
+  function action(text,callback){const button=document.createElement('button');button.type='button';button.textContent=text;button.disabled=frozen;button.onclick=callback;return button;}
+  function render(){
+    const card=active();host.replaceChildren();if(!card)return;
+    let data=card.querySelector('.project-data');
+    if(owner){const tools=document.createElement('div');tools.className='work-section-tools';const select=document.createElement('select');select.setAttribute('aria-label','New work section');['Elevation','Floor Plans','Elevation Types','Construction Photos','Execution Photos','Interiors','Other Work'].forEach(name=>{const option=document.createElement('option');option.textContent=name;select.append(option);});tools.append(select,action('＋ Add section',()=>{const section=document.createElement('section');section.className='project-work-section';const h=document.createElement('h3'),p=document.createElement('p'),gallery=document.createElement('div');h.textContent=select.value;p.textContent='Add an explanation of the design, details, materials, or work shown here.';p.className='work-section-description';gallery.className='work-section-gallery';section.append(h,p,gallery);data.append(section);notify();render();host.lastElementChild?.scrollIntoView({block:'nearest'});}));host.append(tools);}
+    [...data.querySelectorAll('.project-work-section')].forEach((source,index)=>{
+      const section=document.createElement('section');section.className='work-detail';
+      const number=document.createElement('span');number.className='work-detail-number';number.textContent=String(index+1).padStart(2,'0');
+      const title=document.createElement('h3');title.textContent=source.querySelector('h3').textContent;
+      const description=document.createElement('p');description.className='work-detail-description';description.textContent=source.querySelector('.work-section-description').textContent;
+      for(const [element,target]of [[title,source.querySelector('h3')],[description,source.querySelector('.work-section-description')]]){element.contentEditable=String(owner&&!frozen);element.setAttribute('aria-label',element===title?'Section heading':'Section explanation');element.addEventListener('input',()=>{target.textContent=element.textContent;clearTimeout(timer);timer=setTimeout(notify,500);});element.addEventListener('paste',event=>{event.preventDefault();document.execCommand('insertText',false,event.clipboardData.getData('text/plain'));});}
+      section.append(number,title,description);
+      const gallery=document.createElement('div');gallery.className='work-detail-gallery';
+      const stored=source.querySelector('.work-section-gallery');
+      [...stored.querySelectorAll('img')].forEach(photo=>{const figure=document.createElement('figure'),img=photo.cloneNode();img.loading='lazy';figure.append(img);if(owner)figure.append(action('Remove photo',()=>{photo.remove();notify();render();}));gallery.append(figure);});
+      if(!gallery.children.length){const empty=document.createElement('p');empty.className='work-detail-empty';empty.textContent=owner?'Add photos, plans, or detail drawings for this section.':'Photos and drawings coming soon.';gallery.append(empty);}section.append(gallery);
+      if(owner){const tools=document.createElement('div');tools.className='work-section-tools';const label=document.createElement('label');label.className='section-upload';label.textContent='＋ Add photos / drawings';const input=document.createElement('input');input.type='file';input.accept='image/jpeg,image/png,image/webp,image/gif,image/avif';input.multiple=true;input.disabled=frozen;input.setAttribute('aria-label','Add photos to '+title.textContent);label.append(input);input.onchange=()=>{for(const file of input.files){if(!file.type.startsWith('image/')||file.size>50*1024*1024){alert('Choose an image under 50 MB. Originals are never compressed.');continue;}const url=URL.createObjectURL(file);editor.files.set(url,file);const img=document.createElement('img');img.src=url;img.alt=file.name.replace(/\.[^.]+$/,'');stored.append(img);}input.value='';notify();render();};tools.append(label,action('Sort existing photos',()=>{section.querySelector('.existing-photo-choices')?.remove();const choices=document.createElement('div');choices.className='existing-photo-choices';const heading=document.createElement('p');heading.textContent='Choose a photo to move into this section:';choices.append(heading);const photos=[...card.querySelector('.project-gallery').querySelectorAll('img')];if(!photos.length)heading.textContent='All existing photos have been sorted. You can add more photos above.';photos.forEach(photo=>{const pick=action('',()=>{stored.append(photo);dialog.querySelectorAll('.dialog-gallery img').forEach(img=>{if(img.getAttribute('src')===photo.getAttribute('src'))img.closest('.gallery-item')?.remove();});notify();render();});pick.setAttribute('aria-label','Move existing photo '+(photo.alt||'to section'));pick.append(photo.cloneNode());choices.append(pick);});section.append(choices);}),action('Move up',()=>{const previous=source.previousElementSibling;if(previous?.classList.contains('project-work-section')){previous.before(source);notify();render();}}),action('Move down',()=>{const next=source.nextElementSibling;if(next?.classList.contains('project-work-section')){next.after(source);notify();render();}}));section.append(tools);}host.append(section);
+    });
+  }
+  const setOwner=editor.setOwner;editor.setOwner=function(value){owner=value===true;const result=setOwner.call(this,value);render();return result;};
+  const load=editor.loadContent;editor.loadContent=function(content){const result=load.call(this,content);render();return result;};
+  const freeze=editor.freeze;editor.freeze=function(value){frozen=!!value;const result=freeze.call(this,value);render();return result;};
+  addEventListener('hashchange',render);
+  render();
+})();
+
