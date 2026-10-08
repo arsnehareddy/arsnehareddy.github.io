@@ -157,3 +157,68 @@
   }, true);
   refresh();
 })();
+
+(() => {
+  const main = document.querySelector('main');
+  if (!main || !window.portfolioEditor) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  let paused = reduced.matches, active = '', scheduled = false;
+  const originalSnapshot = window.portfolioEditor.snapshot;
+  window.portfolioEditor.snapshot = function() {
+    const content = originalSnapshot.call(this);
+    const template = document.createElement('template');
+    template.innerHTML = content.mainHTML;
+    template.content.querySelectorAll('.motion-stage,.hero-motion').forEach(el => el.remove());
+    content.mainHTML = template.innerHTML;
+    return content;
+  };
+  function mount() {
+    const section = main.querySelector('#architecture-videos');
+    if (!section || section.querySelector('.motion-stage')) return;
+    const stage = document.createElement('div');
+    stage.className = 'motion-stage'; active = '';
+    stage.innerHTML = '<div class="motion-screen"><img class="motion-photo" alt="" aria-hidden="true"><video class="motion-film" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video><div class="motion-shade"></div><div class="motion-caption"><span class="motion-kicker">A study in space / Scroll to explore</span><h3 class="motion-title"></h3><span class="motion-count"></span></div><button type="button" class="motion-toggle">Pause motion</button></div>';
+    section.querySelector('.video-grid').before(stage);
+    stage.querySelector('button').addEventListener('click', () => { paused = !paused; update(); });
+  }
+  function update() {
+    mount();
+    const stage = main.querySelector('.motion-stage');
+    if (!stage) return;
+    const slots = [...main.querySelectorAll('.video-slot')];
+    const films = slots.map(slot => ({src:slot.querySelector('video')?.getAttribute('src') || slot.querySelector('video source')?.getAttribute('src'),title:slot.querySelector('h3')?.textContent || 'Architecture in motion'})).filter(film => film.src);
+    const studies = [
+      {src:'assets/photo-002.jpg',title:'Light. Material. Space.'},
+      {src:'assets/photo-012.jpg',title:'Another perspective.'},
+      {src:'assets/photo-001.jpg',title:'From idea to detail.'}
+    ];
+    const collection = films.length ? films : studies;
+    const rect = stage.getBoundingClientRect();
+    const progress = Math.max(0,Math.min(.999,-rect.top / Math.max(1,rect.height-innerHeight*.7)));
+    const index = Math.min(collection.length-1,Math.floor(progress*collection.length));
+    const item = collection[index], video = stage.querySelector('video'), photo = stage.querySelector('img');
+    const key = (films.length?'video:':'photo:')+item.src;
+    if (key !== active) {
+      active = key;
+      video.pause();
+      if (films.length) { video.src = item.src; video.muted = true; video.load(); }
+      else {video.removeAttribute('src');video.load();photo.src=item.src;}
+      stage.querySelector('.motion-title').textContent=item.title;
+      stage.querySelector('.motion-count').textContent=String(index+1).padStart(2,'0')+' / '+String(collection.length).padStart(2,'0')+(films.length?' · Film':' · Photographic study');
+    }
+    video.hidden = !films.length;
+    photo.hidden = !!films.length;
+    stage.classList.toggle('motion-paused',paused);
+    const label = paused?'Play motion':'Pause motion'; if (stage.querySelector('button').textContent !== label) stage.querySelector('button').textContent = label; const hero = main.querySelector('.hero-visual img'); if (hero) hero.style.animationPlayState = paused?'paused':'running';
+    stage.querySelector('button').setAttribute('aria-pressed',String(paused));
+    const visible = rect.top < innerHeight && rect.bottom > 0 && !document.hidden;
+    if (films.length && visible && !paused) video.play().catch(() => {});else video.pause();
+  }
+  function schedule() {if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;update();});}
+  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);
+  document.addEventListener('visibilitychange',schedule);
+  reduced.addEventListener('change',()=>{paused=reduced.matches;schedule();});
+  new MutationObserver(schedule).observe(main,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});
+  update();
+})();
+
